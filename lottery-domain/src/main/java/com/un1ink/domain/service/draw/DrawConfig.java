@@ -2,13 +2,19 @@ package com.un1ink.domain.service.draw;
 
 import com.un1ink.domain.service.algorithm.IDrawAlgorithm;
 import org.springframework.stereotype.Component;
-
+import com.un1ink.common.constants.*;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-//@Component
+import static com.un1ink.common.constants.StrategyMode.ENTIRETY;
+import static com.un1ink.common.constants.StrategyMode.SINGLE;
+
+/**
+ * @description: 配置抽奖策略信息
+ * @author un1ink
+ */
 public class DrawConfig {
     @Resource
     private IDrawAlgorithm defaultRateRandomDrawAlgorithm;
@@ -20,9 +26,8 @@ public class DrawConfig {
 
     @PostConstruct
     public void init() {
-        // 后续为了代码可读性，应用枚举类型存储
-        drawAlgorithmMap.put(1, defaultRateRandomDrawAlgorithm);
-        drawAlgorithmMap.put(2, singleRateRandomDrawAlgorithm);
+        drawAlgorithmMap.put(SINGLE.getCode(), defaultRateRandomDrawAlgorithm);
+        drawAlgorithmMap.put(ENTIRETY.getCode(), singleRateRandomDrawAlgorithm);
     }
 
 }

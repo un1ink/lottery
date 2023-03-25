@@ -1,53 +1,59 @@
 package com.un1ink;
 
-import com.un1ink.domain.model.vo.AwardRateInfo;
-import com.un1ink.domain.service.algorithm.impl.DefaultRateRandomDrawAlgorithm;
-import com.un1ink.domain.service.algorithm.impl.SingleRateRandomDrawAlgorithm;
-import org.junit.Before;
+import com.alibaba.fastjson.JSON;
+import com.un1ink.domain.model.req.DrawReq;
+import com.un1ink.domain.service.draw.IDrawExec;
+import com.un1ink.infrastructure.dao.IActivityDao;
+import com.un1ink.infrastructure.po.Activity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class StrategyAlgorithmTest {
 
-    @Resource(name = "singleRateRandomDrawAlgorithm")
-    private SingleRateRandomDrawAlgorithm singleRateRandomDrawAlgorithm;
+    private Logger logger = LoggerFactory.getLogger(StrategyAlgorithmTest.class);
 
-    @Resource(name = "defaultRateRandomDrawAlgorithm")
-    private DefaultRateRandomDrawAlgorithm defaultRateRandomDrawAlgorithm;
 
-    @Before
-    public void init() {
-        List<AwardRateInfo> strategyList = new ArrayList<>();
-        strategyList.add(new AwardRateInfo("一等奖：MacBook", new BigDecimal("0.05")));
-        strategyList.add(new AwardRateInfo("二等奖：iphone", new BigDecimal("0.15")));
-        strategyList.add(new AwardRateInfo("三等奖：ipad", new BigDecimal("0.20")));
-        strategyList.add(new AwardRateInfo("四等奖：AirPods", new BigDecimal("0.25")));
-        strategyList.add(new AwardRateInfo("五等奖：充电宝", new BigDecimal("0.35")));
+    @Resource
+    private IActivityDao activityDao;
 
-        Long strategyId = 100001L;
-
-        singleRateRandomDrawAlgorithm.initRateTuple(strategyId, strategyList);
-    }
+    @Resource
+    private IDrawExec drawExec;
 
     @Test
-    public void test_randomDrawAlgorithm() {
+    public void test_drawExec() {
+        drawExec.doDrawExec(new DrawReq("小傅哥", 100001L));
+        drawExec.doDrawExec(new DrawReq("小佳佳", 100001L));
+        drawExec.doDrawExec(new DrawReq("小蜗牛", 100001L));
+        drawExec.doDrawExec(new DrawReq("八杯水", 100001L));
+    }
 
-        List<String> excludeAwardIds = new ArrayList<>();
-        excludeAwardIds.add("二等奖：iphone");
-        excludeAwardIds.add("四等奖：AirPods");
+//    @Test
+//    public void test_insert() {
+//        Activity activity = new Activity();
+//        activity.setActivityId(300002L);
+//        activity.setActivityName("测试活动");
+//        activity.setActivityDesc("仅用于插入数据测试");
+//        activity.setBeginDateTime(new Date());
+//        activity.setEndDateTime(new Date());
+//        activity.setStockCount(100);
+//        activity.setTakeCount(10);
+//        activity.setState(0);
+//        activity.setCreator("xiaofuge");
+//        activityDao.insert(activity);
+//    }
 
-        for (int i = 0; i < 20; i++) {
-            System.out.println("中奖结果：" + singleRateRandomDrawAlgorithm.randomDraw(100001L, excludeAwardIds));
-        }
-
+    @Test
+    public void test_select() {
+        Activity activity = activityDao.queryActivityById(100001L);
+        logger.info("测试结果：{}", JSON.toJSONString(activity));
     }
 }

@@ -18,12 +18,10 @@ public class SingleRateRandomDrawAlgorithm extends BaseAlgorithm {
 
         int randomVal = new SecureRandom().nextInt(100) + 1;
         int idx = super.hashIdx(randomVal);
-//        System.out.println("randomVal:"+randomVal);
-//        System.out.println("idx:" + idx);
+
 
         String awardId = rateTuple[idx];
         if(null == awardId || excludeAwardIds.contains(awardId)){
-            System.out.println("return 未中奖");
             return null;
         }
 

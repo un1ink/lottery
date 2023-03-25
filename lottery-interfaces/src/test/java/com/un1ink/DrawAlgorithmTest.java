@@ -2,6 +2,8 @@ package com.un1ink;
 
 import com.alibaba.fastjson.JSON;
 import com.un1ink.domain.model.req.DrawReq;
+import com.un1ink.domain.model.vo.AwardRateInfo;
+import com.un1ink.domain.service.algorithm.IDrawAlgorithm;
 import com.un1ink.domain.service.draw.IDrawExec;
 import com.un1ink.infrastructure.dao.IActivityDao;
 import com.un1ink.infrastructure.po.Activity;
@@ -14,50 +16,44 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class DrawAlgorithmTest {
 
-    private Logger logger = LoggerFactory.getLogger(DrawAlgorithmTest.class);
+    //    @Resource(name = "defaultRateRandomDrawAlgorithm")
+    @Resource(name = "singleRateRandomDrawAlgorithm")
+    private IDrawAlgorithm randomDrawAlgorithm;
 
-    @Resource
-    private IActivityDao activityDao;
-
-    @Resource(name = "drawExecImpl")
-    private IDrawExec drawExec;
     @Before
-    public void init(){
+    public void init() {
+        // 奖品信息
+        List<AwardRateInfo> strategyList = new ArrayList<>();
+        strategyList.add(new AwardRateInfo("一等奖：IMac", new BigDecimal("0.05")));
+        strategyList.add(new AwardRateInfo("二等奖：iphone", new BigDecimal("0.15")));
+        strategyList.add(new AwardRateInfo("三等奖：ipad", new BigDecimal("0.20")));
+        strategyList.add(new AwardRateInfo("四等奖：AirPods", new BigDecimal("0.25")));
+        strategyList.add(new AwardRateInfo("五等奖：充电宝", new BigDecimal("0.35")));
 
-    }
-    @Test
-    public void test_drawExec() {
-        drawExec.doDrawExec(new DrawReq("小傅哥", 100001L));
-        drawExec.doDrawExec(new DrawReq("小佳佳", 100001L));
-        drawExec.doDrawExec(new DrawReq("小蜗牛", 100001L));
-        drawExec.doDrawExec(new DrawReq("八杯水", 100001L));
-    }
-
-//    @Test
-    public void test_insert() {
-        Activity activity = new Activity();
-        activity.setActivityId(100002L);
-        activity.setActivityName("测试活动");
-        activity.setActivityDesc("仅用于插入数据测试");
-        activity.setBeginDateTime(new Date());
-        activity.setEndDateTime(new Date());
-        activity.setStockCount(100);
-        activity.setTakeCount(10);
-        activity.setState(0);
-        activity.setCreator("xiaofuge");
-        activityDao.insert(activity);
+        // 初始数据
+        randomDrawAlgorithm.initRateTuple(100001L, strategyList);
     }
 
     @Test
-    public void test_select() {
-        Activity activity = activityDao.queryActivityById(100001L);
-        logger.info("测试结果：{}", JSON.toJSONString(activity));
+    public void test_randomDrawAlgorithm() {
+
+        List<String> excludeAwardIds = new ArrayList<>();
+        excludeAwardIds.add("二等奖：iphone");
+        excludeAwardIds.add("四等奖：AirPods");
+
+        for (int i = 0; i < 20; i++) {
+            System.out.println("中奖结果：" + randomDrawAlgorithm.randomDraw(100001L, excludeAwardIds));
+        }
+
     }
 
 }

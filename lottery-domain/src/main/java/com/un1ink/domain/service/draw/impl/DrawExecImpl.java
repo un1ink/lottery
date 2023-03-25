@@ -1,68 +1,51 @@
 package com.un1ink.domain.service.draw.impl;
 
-import com.un1ink.domain.model.aggregates.StrategyRich;
-import com.un1ink.domain.model.req.DrawReq;
-import com.un1ink.domain.model.res.DrawRes;
-import com.un1ink.domain.model.vo.AwardRateInfo;
-import com.un1ink.domain.repository.IStrategyRepository;
+
 import com.un1ink.domain.service.algorithm.IDrawAlgorithm;
-import com.un1ink.domain.service.draw.DrawBase;
+import com.un1ink.domain.service.draw.AbstractDrawBase;
 import com.un1ink.domain.service.draw.IDrawExec;
-import com.un1ink.infrastructure.dao.IStrategyDetailDao;
-import com.un1ink.infrastructure.po.Award;
-import com.un1ink.infrastructure.po.Strategy;
-import com.un1ink.infrastructure.po.StrategyDetail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
+import com.alibaba.fastjson.JSON;
 
-import javax.annotation.Resource;
-import java.util.ArrayList;
+
 import java.util.List;
 
+/**
+ * @description: 抽奖方法实现
+ * @author un1ink
+ */
 @Component
-public class DrawExecImpl extends DrawBase implements IDrawExec {
+public class DrawExecImpl extends AbstractDrawBase {
 
     private Logger logger = LoggerFactory.getLogger(DrawExecImpl.class);
 
-    @Resource
-    private IStrategyRepository strategyRepository;
 
     @Override
-    public DrawRes doDrawExec(DrawReq req) {
-        logger.info("执行策略抽奖开始，strategyId：{}", req.getStrategyId());
-
-        // 获取抽奖策略配置数据
-        StrategyRich strategyRich = strategyRepository.queryStrategyRich(req.getStrategyId());
-        Strategy strategy = strategyRich.getStrategy();
-
-        List<StrategyDetail> strategyDetailList  = strategyRich.getStrategyDetailList();
-
-        checkAndInitRateData(req.getStrategyId(), strategy.getStrategyMode(), strategyDetailList);
-
-
-        IDrawAlgorithm drawAlgorithm = drawAlgorithmMap.get(strategy.getStrategyMode());
-        String awardId = drawAlgorithm.randomDraw(req.getStrategyId(), new ArrayList<>());
-        // 获取奖品信息
-
-        if(null == awardId) {
-            Award award = strategyRepository.queryAwardInfo(awardId);
-            logger.info("未中奖！");
-            return null;
-        } else {
-            Award award = strategyRepository.queryAwardInfo(awardId);
-            logger.info("执行策略抽奖完成，中奖用户：{} 奖品ID：{} 奖品名称：{}", req.getUId(), awardId, award.getAwardName());
-            return new DrawRes(req.getUId(), req.getStrategyId(), awardId, award.getAwardName());
-
-        }
-
-
-        // 封装结果
-
-
-
+    protected List<String> queryExcludeAwardIds(Long strategyId) {
+        List<String> awardList = strategyRepository.queryNoStockStrategyAwardList(strategyId);
+        logger.info("执行抽奖策略 strategyId：{}，无库存排除奖品列表ID集合 awardList：{}", strategyId, JSON.toJSONString(awardList));
+        return awardList;
     }
 
+    @Override
+    protected String drawAlgorithm(Long strategyId, IDrawAlgorithm drawAlgorithm, List<String> excludeAwardIds) {
+        // 执行抽奖
+        String awardId = drawAlgorithm.randomDraw(strategyId, excludeAwardIds);
 
+        // 判断抽奖结果
+        if (null == awardId) {
+            return null;
+        }
+
+        /*
+         * 扣减库存，暂时采用数据库行级锁的方式进行扣减库存，后续优化为 Redis 分布式锁扣减 decr/incr
+         * 注意：通常数据库直接锁行记录的方式并不能支撑较大体量的并发，但此种方式需要了解，因为在分库分表下的正常数据流量下的个人数据记录中，是可以使用行级锁的，因为他只影响到自己的记录，不会影响到其他人
+         */
+        boolean isSuccess = strategyRepository.deductStock(strategyId, awardId);
+
+        // 返回结果，库存扣减成功返回奖品ID，否则返回NULL 「在实际的业务场景中，如果中奖奖品库存为空，则会发送兜底奖品，比如各类券」
+        return isSuccess ? awardId : null;
+    }
 }

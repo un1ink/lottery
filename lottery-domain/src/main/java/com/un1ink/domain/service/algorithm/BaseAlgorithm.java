@@ -17,7 +17,7 @@ public abstract class BaseAlgorithm implements IDrawAlgorithm{
 
     @Override
     public void initRateTuple(Long strategyId, List<AwardRateInfo> awardRateInfoList) {
-        System.out.println("has initRateTuple");
+        // System.out.println("has initRateTuple");
         awardRateInfoMap.put(strategyId, awardRateInfoList);
         String[] rateTuple = rateTupleMap.computeIfAbsent(strategyId, k -> new String[RATE_TUPLE_LENGTH]);
 
