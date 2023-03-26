@@ -1,24 +1,16 @@
 package com.un1ink;
 
-import com.alibaba.fastjson.JSON;
-import com.un1ink.domain.model.req.DrawReq;
-import com.un1ink.domain.model.vo.AwardRateInfo;
-import com.un1ink.domain.service.algorithm.IDrawAlgorithm;
-import com.un1ink.domain.service.draw.IDrawExec;
-import com.un1ink.infrastructure.dao.IActivityDao;
-import com.un1ink.infrastructure.po.Activity;
+import com.un1ink.domain.strategy.model.vo.AwardRateInfo;
+import com.un1ink.domain.strategy.service.algorithm.IDrawAlgorithm;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @RunWith(SpringRunner.class)

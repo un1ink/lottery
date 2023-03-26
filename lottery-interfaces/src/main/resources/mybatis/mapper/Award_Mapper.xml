@@ -3,9 +3,8 @@
 <mapper namespace="com.un1ink.infrastructure.dao.IAwardDao">
     <select id="queryAwardInfo" parameterType="java.lang.String" resultType="com.un1ink.infrastructure.po.Award">
         SELECT
-        id, awardId, awardType, awardCount, awardName, awardContent, createTime, updateTime
+        id, awardId, awardType, awardName, awardContent, createTime, updateTime
         FROM award
         WHERE awardId = #{awardId}
     </select>
-    <!--add mapper-->
 </mapper>

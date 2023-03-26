@@ -1,8 +1,8 @@
 package com.un1ink;
 
 import com.alibaba.fastjson.JSON;
-import com.un1ink.domain.model.req.DrawReq;
-import com.un1ink.domain.service.draw.IDrawExec;
+import com.un1ink.domain.strategy.model.req.DrawReq;
+import com.un1ink.domain.strategy.service.draw.IDrawExec;
 import com.un1ink.infrastructure.dao.IActivityDao;
 import com.un1ink.infrastructure.po.Activity;
 import org.junit.Test;
@@ -13,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
-import java.util.Date;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
