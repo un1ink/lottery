@@ -1,7 +1,8 @@
 package com.un1ink.domain.strategy.model.aggregates;
 
-import com.un1ink.infrastructure.po.Strategy;
-import com.un1ink.infrastructure.po.StrategyDetail;
+import com.un1ink.domain.strategy.model.vo.StrategyBriefVO;
+import com.un1ink.domain.strategy.model.vo.StrategyDetailBriefVO;
+
 import lombok.*;
 
 import java.util.List;
@@ -15,8 +16,8 @@ public class StrategyRich {
     // 策略id
     private Long strategyId;
     // 策略配置
-    private Strategy strategy;
+    private StrategyBriefVO strategy;
     // 策略细节
-    private List<StrategyDetail> strategyDetailList;
+    private List<StrategyDetailBriefVO> strategyDetailList;
 
 }

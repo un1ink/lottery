@@ -7,5 +7,12 @@
         FROM strategy
         where strategyId = #{strategyId}
     </select>
+
+    <insert id="insert" parameterType="com.un1ink.infrastructure.po.Strategy">
+        INSERT INTO strategy(strategyId, strategyDesc, strategyMode, grantType, grantDate, extInfo, createTime, updateTime)
+        VALUES(#{strategyId}, #{strategyDesc}, #{strategyMode}, #{grantType},
+               #{grantDate}, #{extInfo}, NOW(), NOW())
+    </insert>
+
     <!--add mapper-->
 </mapper>

@@ -7,8 +7,7 @@ import javax.annotation.Resource;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.un1ink.common.constants.StrategyMode.ENTIRETY;
-import static com.un1ink.common.constants.StrategyMode.SINGLE;
+import com.un1ink.common.constants.StrategyMode;
 
 /**
  * @description: 配置抽奖策略信息
@@ -25,8 +24,8 @@ public class DrawConfig {
 
     @PostConstruct
     public void init() {
-        drawAlgorithmMap.put(SINGLE.getCode(), defaultRateRandomDrawAlgorithm);
-        drawAlgorithmMap.put(ENTIRETY.getCode(), singleRateRandomDrawAlgorithm);
+        drawAlgorithmMap.put(StrategyMode.SINGLE.getCode(), defaultRateRandomDrawAlgorithm);
+        drawAlgorithmMap.put(StrategyMode.ENTIRETY.getCode(), singleRateRandomDrawAlgorithm);
     }
 
 }

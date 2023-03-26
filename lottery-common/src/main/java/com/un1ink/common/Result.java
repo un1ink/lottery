@@ -1,9 +1,7 @@
 package com.un1ink.common;
 
 import com.un1ink.common.constants.ResponseCode;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
@@ -20,15 +18,24 @@ public class Result implements Serializable {
         this.info = info;
     }
 
-    public static Result buildResult(String code, String info) {
-        return new Result(code, info);
+    public static Result buildResult(ResponseCode code, String info) {
+        return new Result(code.getCode(), info);
     }
 
     public static Result buildSuccessResult() {
         return new Result(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getInfo());
+
+    }
+
+    public static Result buildSuccessResult(String info) {
+        return new Result(ResponseCode.UN_ERROR.getCode(), info);
     }
 
     public static Result buildErrorResult() {
         return new Result(ResponseCode.UN_ERROR.getCode(), ResponseCode.UN_ERROR.getInfo());
+    }
+
+    public static Result buildErrorResult(String info) {
+        return new Result(ResponseCode.UN_ERROR.getCode(), info);
     }
 }

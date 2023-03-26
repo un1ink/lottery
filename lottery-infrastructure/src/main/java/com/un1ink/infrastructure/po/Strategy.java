@@ -4,6 +4,9 @@ import lombok.*;
 
 import java.util.Date;
 
+/**
+ * @author un1ink
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

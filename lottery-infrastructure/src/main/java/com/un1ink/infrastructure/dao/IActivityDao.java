@@ -1,6 +1,7 @@
 package com.un1ink.infrastructure.dao;
 
 import com.un1ink.infrastructure.po.Activity;
+import com.un1ink.infrastructure.po.AlterState;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -23,5 +24,13 @@ public interface IActivityDao {
      * @return 活动详情
      */
     Activity queryActivityById(Long activityId);
+
+    /**
+     * 变更活动状态
+     *
+     * @param alterStateVO  [activityId、beforeState、afterState]
+     * @return 更新数量
+     */
+    int alterState(AlterState alterStateVO);
 
 }

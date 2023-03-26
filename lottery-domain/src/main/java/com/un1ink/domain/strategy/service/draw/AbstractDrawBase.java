@@ -1,14 +1,13 @@
 package com.un1ink.domain.strategy.service.draw;
 
+import com.un1ink.common.constants.DrawState;
+import com.un1ink.common.constants.StrategyMode;
 import com.un1ink.domain.strategy.model.aggregates.StrategyRich;
 import com.un1ink.domain.strategy.model.req.DrawReq;
 import com.un1ink.domain.strategy.model.res.DrawRes;
-import com.un1ink.domain.strategy.model.vo.AwardRateInfo;
-import com.un1ink.domain.strategy.model.vo.DrawAwardInfo;
+import com.un1ink.domain.strategy.model.vo.*;
 import com.un1ink.domain.strategy.service.algorithm.IDrawAlgorithm;
-import com.un1ink.infrastructure.po.Award;
-import com.un1ink.infrastructure.po.Strategy;
-import com.un1ink.infrastructure.po.StrategyDetail;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,8 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.un1ink.common.constants.StrategyMode.SINGLE;
-import static com.un1ink.common.constants.DrawState.FAIL;
-import static com.un1ink.common.constants.DrawState.SUCCESS;
+import com.un1ink.common.constants.DrawState;
 
 /**
  * @description:
@@ -32,7 +30,7 @@ public abstract class AbstractDrawBase extends DrawStrategySupport implements ID
     public DrawRes doDrawExec(DrawReq req) {
         // 1.获取抽奖测类
         StrategyRich strategyRich = super.queryStrategyRich(req.getStrategyId());
-        Strategy strategy = strategyRich.getStrategy();
+        StrategyBriefVO strategy = strategyRich.getStrategy();
 
         // 2.校验初始化
         this.checkAndInitRateData(req.getStrategyId(), strategy.getStrategyMode(), strategyRich.getStrategyDetailList());
@@ -64,9 +62,9 @@ public abstract class AbstractDrawBase extends DrawStrategySupport implements ID
      */
     protected abstract String drawAlgorithm(Long strategyId, IDrawAlgorithm drawAlgorithm, List<String> excludeAwardIds);
 
-    public void checkAndInitRateData(Long strategyId, Integer strategyMode, List<StrategyDetail> strategyDetailList) {
+    public void checkAndInitRateData(Long strategyId, Integer strategyMode, List<StrategyDetailBriefVO> strategyDetailList) {
         // 非单项概率不需要初始化数组
-        if (!SINGLE.getCode().equals(strategyMode)) {
+        if (!StrategyMode.SINGLE.getCode().equals(strategyMode)) {
             return;
         }
         IDrawAlgorithm drawAlgorithm = drawAlgorithmMap.get(strategyMode);
@@ -76,7 +74,7 @@ public abstract class AbstractDrawBase extends DrawStrategySupport implements ID
         }
 
         List<AwardRateInfo> awardRateInfoList = new ArrayList<>(strategyDetailList.size());
-        for (StrategyDetail strategyDetail : strategyDetailList) {
+        for (StrategyDetailBriefVO strategyDetail : strategyDetailList) {
             awardRateInfoList.add(new AwardRateInfo(strategyDetail.getAwardId(), strategyDetail.getAwardRate()));
         }
         drawAlgorithm.initRateTuple(strategyId, awardRateInfoList);
@@ -85,14 +83,14 @@ public abstract class AbstractDrawBase extends DrawStrategySupport implements ID
     private DrawRes buildDrawResult(String uId, Long strategyId, String awardId) {
         if(null == awardId) {
             logger.info("执行策略抽奖完成【未中奖】，用户：{} 策略ID：{}", uId, strategyId);
-            return new DrawRes(uId, strategyId, FAIL.getCode(), null);
+            return new DrawRes(uId, strategyId, DrawState.FAIL.getCode(), null);
         }
 
-        Award award = super.queryAwardInfoByAwardId(awardId);
+        AwardBriefVO award = super.queryAwardInfoByAwardId(awardId);
         DrawAwardInfo drawAwardInfo = new DrawAwardInfo(award.getAwardId(),award.getAwardType(), award.getAwardName(), award.getAwardContent());
 
         logger.info("执行策略抽奖完成【已中奖】，用户：{} 策略ID：{} 奖品ID：{} 奖品名称：{}", uId, strategyId, awardId, award.getAwardName());
-        return new DrawRes(uId, strategyId, SUCCESS.getCode(), drawAwardInfo);
+        return new DrawRes(uId, strategyId, DrawState.SUCCESS.getCode(), drawAwardInfo);
 
 
     }

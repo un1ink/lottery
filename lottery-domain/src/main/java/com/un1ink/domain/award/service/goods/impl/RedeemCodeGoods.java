@@ -7,7 +7,7 @@ import com.un1ink.domain.award.service.goods.IDistributionGoods;
 import org.springframework.stereotype.Component;
 
 import static com.un1ink.common.constants.AwardState.SUCCESS;
-import static com.un1ink.common.constants.AwardType.RedeemCodeGoods;
+import com.un1ink.common.constants.AwardType;
 
 /**
  * @description: 兑换码类型商品
@@ -26,6 +26,6 @@ public class RedeemCodeGoods extends DistributionBase implements IDistributionGo
 
     @Override
     public Integer getDistributionGoodName() {
-        return RedeemCodeGoods.getCode();
+        return AwardType.RedeemCodeGoods.getCode();
     }
 }

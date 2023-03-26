@@ -1,5 +1,5 @@
 package com.un1ink.domain.strategy.model.res;
-import static com.un1ink.common.constants.DrawState.FAIL;
+import com.un1ink.common.constants.DrawState;
 
 import com.un1ink.domain.strategy.model.vo.DrawAwardInfo;
 import lombok.*;
@@ -27,7 +27,7 @@ public class DrawRes {
     /**
      * 奖品id
      */
-    private Integer drawState = FAIL.getCode();
+    private Integer drawState = DrawState.FAIL.getCode();
 
     /**
      * 奖品名称

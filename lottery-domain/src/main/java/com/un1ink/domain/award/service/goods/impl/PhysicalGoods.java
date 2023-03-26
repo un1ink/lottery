@@ -1,5 +1,6 @@
 package com.un1ink.domain.award.service.goods.impl;
 
+import com.un1ink.common.constants.AwardType;
 import com.un1ink.domain.award.model.req.GoodsReq;
 import com.un1ink.domain.award.model.res.DistributionRes;
 import com.un1ink.domain.award.service.goods.DistributionBase;
@@ -25,6 +26,6 @@ public class PhysicalGoods extends DistributionBase implements IDistributionGood
 
     @Override
     public Integer getDistributionGoodName() {
-        return PhysicalGoods.getCode();
+        return AwardType.PhysicalGoods.getCode();
     }
 }

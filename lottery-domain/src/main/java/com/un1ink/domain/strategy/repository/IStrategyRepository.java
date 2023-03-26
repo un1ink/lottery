@@ -1,7 +1,8 @@
 package com.un1ink.domain.strategy.repository;
 
+import com.un1ink.domain.activity.model.vo.AwardVO;
 import com.un1ink.domain.strategy.model.aggregates.StrategyRich;
-import com.un1ink.infrastructure.po.Award;
+import com.un1ink.domain.strategy.model.vo.AwardBriefVO;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public interface IStrategyRepository {
      * @param awardId 奖品id
      * @return 奖品信息
      */
-    Award queryAwardInfo(String awardId);
+    AwardBriefVO queryAwardInfo(String awardId);
 
     /**
      * 查询无库存奖品
