@@ -32,6 +32,6 @@ public enum ActivityState {
 
 
 
-    private Integer code;
-    private String info;
+    private final Integer code;
+    private final String info;
 }
