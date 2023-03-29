@@ -28,7 +28,7 @@ public interface IUserStrategyExportDao {
      * @param uId 用户ID
      * @return 用户策略
      */
-    @DBRouter(key = "UId")
+    @DBRouter
     UserStrategyExport queryUserStrategyExportByUId(String uId);
 
 }

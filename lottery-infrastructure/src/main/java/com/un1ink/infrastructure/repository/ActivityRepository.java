@@ -1,8 +1,10 @@
 package com.un1ink.infrastructure.repository;
 
 import com.un1ink.common.constants.ActivityState;
+import com.un1ink.domain.activity.model.req.PartakeReq;
 import com.un1ink.domain.activity.repository.IActivityRepository;
 import com.un1ink.domain.activity.model.vo.*;
+import com.un1ink.domain.activity.repository.IUserTakeActivityRepository;
 import com.un1ink.infrastructure.dao.*;
 import com.un1ink.infrastructure.po.*;
 import org.springframework.beans.BeanUtils;
@@ -28,6 +30,9 @@ public class ActivityRepository implements IActivityRepository {
     private IStrategyDao strategyDao;
     @Resource
     private IStrategyDetailDao strategyDetailDao;
+
+    @Resource
+    private IUserTakeActivityCountDao userTakeActivityCountDao;
 
     @Override
     public void addActivity(ActivityVO activity) {
@@ -84,4 +89,39 @@ public class ActivityRepository implements IActivityRepository {
         int count = activityDao.alterState(alterState);
         return 1 == count;
     }
+
+    @Override
+    public ActivityBillVO queryActivityBill(PartakeReq req) {
+        // 查询活动信息
+        Activity activity = activityDao.queryActivityById(req.getActivityId());
+
+        // 查询用户可参加次数
+        UserTakeActivityCount userTakeActivityCountReq = new UserTakeActivityCount();
+        userTakeActivityCountReq.setUId(req.getUId());
+        userTakeActivityCountReq.setActivityId(req.getActivityId());
+
+
+        // 封装结果信息
+        UserTakeActivityCount userTakeActivityCount = userTakeActivityCountDao.queryUserTakeActivityCount(userTakeActivityCountReq);
+        ActivityBillVO activityBillVO = new ActivityBillVO();
+        activityBillVO.setUId(req.getUId());
+        activityBillVO.setActivityId(req.getActivityId());
+        activityBillVO.setActivityName(activity.getActivityName());
+        activityBillVO.setBeginDateTime(activity.getBeginDateTime());
+        activityBillVO.setEndDateTime(activity.getEndDateTime());
+        activityBillVO.setTakeCount(activity.getTakeCount());
+        activityBillVO.setStockSurplusCount(activity.getStockSurplusCount());
+        activityBillVO.setStrategyId(activity.getStrategyId());
+        activityBillVO.setState(activity.getState());
+        System.out.println("userTakeActivityCount:" + userTakeActivityCount);
+        activityBillVO.setUserTakeLeftCount(null == userTakeActivityCount ? null : userTakeActivityCount.getLeftCount());
+
+        return activityBillVO;
+    }
+
+    @Override
+    public int subtractionActivityStock(Long activityId) {
+        return activityDao.subtractionActivityStock(activityId);
+    }
+
 }

@@ -3,7 +3,7 @@ package com.un1ink.domain.activity.service.deploy;
 import com.un1ink.domain.activity.model.req.ActivityConfigReq;
 
 /**
- * @description:
+ * @description: 部署活动配置接口
  * @author：un1ink
  * @date: 2023/3/26
  */

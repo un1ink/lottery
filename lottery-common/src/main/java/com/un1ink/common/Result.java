@@ -18,8 +18,14 @@ public class Result implements Serializable {
         this.info = info;
     }
 
+
+
     public static Result buildResult(ResponseCode code, String info) {
         return new Result(code.getCode(), info);
+    }
+
+    public static Result buildResult(ResponseCode code) {
+        return new Result(code.getCode(), code.getInfo());
     }
 
     public static Result buildSuccessResult() {

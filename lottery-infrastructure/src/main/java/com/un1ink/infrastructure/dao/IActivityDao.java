@@ -1,5 +1,7 @@
 package com.un1ink.infrastructure.dao;
 
+import com.un1ink.domain.activity.model.req.PartakeReq;
+import com.un1ink.domain.activity.model.vo.ActivityBillVO;
 import com.un1ink.infrastructure.po.Activity;
 import com.un1ink.infrastructure.po.AlterState;
 import org.apache.ibatis.annotations.Mapper;
@@ -28,9 +30,21 @@ public interface IActivityDao {
     /**
      * 变更活动状态
      *
-     * @param alterStateVO  [activityId、beforeState、afterState]
+     * @param alterState  [activityId、beforeState、afterState]
      * @return 更新数量
      */
-    int alterState(AlterState alterStateVO);
+    int alterState(AlterState alterState);
+
+    /**
+     * 扣减活动库存
+     * @param activityId   活动ID
+     * @return 结果
+     */
+    int subtractionActivityStock(Long activityId);
+
+
+
+
+
 
 }

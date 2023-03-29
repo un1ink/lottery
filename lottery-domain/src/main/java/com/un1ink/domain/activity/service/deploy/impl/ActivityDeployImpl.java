@@ -19,7 +19,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * @description:
+ * @description: 部署活动配置服务实现
  * @author：un1ink
  * @date: 2023/3/26
  */

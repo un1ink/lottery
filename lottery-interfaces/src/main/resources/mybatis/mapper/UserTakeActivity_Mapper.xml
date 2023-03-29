@@ -5,7 +5,7 @@
         INSERT INTO user_take_activity
         (uId, takeId, activityId, activityName, takeDate, takeCount, uuid, createTime, updateTime)
         VALUES
-            (#{uId}, #{takeId}, #{activityId}, #{activityName}, #{takeDate},#{takeCount},#{uuid}, #{createTime},#{updateTime})
+            (#{uId}, #{takeId}, #{activityId}, #{activityName}, #{takeDate},#{takeCount},#{uuid}, NOW(), NOW())
     </insert>
     <!--add mapper-->
 </mapper>

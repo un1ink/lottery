@@ -1,10 +1,8 @@
 package com.un1ink.domain.activity.repository;
 
 import com.un1ink.common.constants.ActivityState;
-import com.un1ink.domain.activity.model.vo.ActivityVO;
-import com.un1ink.domain.activity.model.vo.AwardVO;
-import com.un1ink.domain.activity.model.vo.StrategyDetailVO;
-import com.un1ink.domain.activity.model.vo.StrategyVO;
+import com.un1ink.domain.activity.model.req.PartakeReq;
+import com.un1ink.domain.activity.model.vo.*;
 
 import java.util.List;
 
@@ -22,7 +20,6 @@ public interface IActivityRepository {
     void addActivity(ActivityVO activity);
 
     ActivityVO queryActivityById(Long activityId);
-
     /**
      * 添加奖品配置集合
      *
@@ -53,4 +50,20 @@ public interface IActivityRepository {
      * @return              更新结果
      */
     boolean alterStatus(Long activityId, Enum<ActivityState> beforeState, Enum<ActivityState> afterState);
+    /**
+     * 查询活动详单
+     *
+     * @param req 参与活动请求
+     * @return 账单活动
+     */
+    ActivityBillVO queryActivityBill(PartakeReq req);
+
+    /**
+     * 扣减活动库存
+     * @param activityId   活动ID
+     * @return 结果
+     */
+    int subtractionActivityStock(Long activityId);
+
+
 }

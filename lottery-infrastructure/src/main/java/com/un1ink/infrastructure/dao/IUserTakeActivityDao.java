@@ -14,7 +14,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface IUserTakeActivityDao {
     /**
      * 添加用户领取信息
+     * @param userTakeActivity 用户参加活动信息
      */
-    @DBRouter(key = "UId")
     void insert(UserTakeActivity userTakeActivity);
 }

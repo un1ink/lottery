@@ -5,18 +5,16 @@ import lombok.*;
 import java.util.Date;
 
 /**
- * @description: 用户领取活动表
+ * @description:
  * @author：un1ink
- * @date: 2023/3/28
+ * @date: 2023/3/29
  */
-
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
 @Setter
+@Getter
 @Builder
-@ToString
-public class UserTakeActivity {
+public class UserTakeActivityCount {
     /**
      * 自增ID
      */
@@ -26,29 +24,17 @@ public class UserTakeActivity {
      */
     private String uId;
     /**
-     * 活动领取ID
-     */
-    private Long takeId;
-    /**
      * 活动ID
      */
     private Long activityId;
     /**
-     * 活动名称
+     * 可领取次数
      */
-    private String activityName;
+    private Integer totalCount;
     /**
-     * 活动参与时间
+     * 已领取次数
      */
-    private Date takeDate;
-    /**
-     * 参与次数
-     */
-    private Integer takeCount;
-    /**
-     * 防重ID
-     */
-    private String uuid;
+    private Integer leftCount;
     /**
      * 创建时间
      */

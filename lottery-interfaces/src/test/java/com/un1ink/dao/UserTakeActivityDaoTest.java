@@ -1,5 +1,7 @@
 package com.un1ink.dao;
 
+import com.alibaba.fastjson.JSON;
+import com.un1ink.domain.activity.model.req.PartakeReq;
 import com.un1ink.infrastructure.dao.IUserTakeActivityDao;
 import com.un1ink.infrastructure.po.UserTakeActivity;
 import org.junit.Test;
@@ -26,18 +28,21 @@ public class UserTakeActivityDaoTest {
     @Resource
     private IUserTakeActivityDao userTakeActivityDao;
 
-    @Test
-    public void test_insert() {
-        UserTakeActivity userTakeActivity = new UserTakeActivity();
-        userTakeActivity.setUId("Uhdgkw766120e"); // 1库：Ukdli109op89oi 2库：Ukdli109op811d
-        userTakeActivity.setTakeId(121019889410L);
-        userTakeActivity.setActivityId(100001L);
-        userTakeActivity.setActivityName("测试活动");
-        userTakeActivity.setTakeDate(new Date());
-        userTakeActivity.setTakeCount(10);
-        userTakeActivity.setUuid("Uhdgkw766120d");
+//    @Test
+//    public void test_insert() {
+//        UserTakeActivity userTakeActivity = new UserTakeActivity();
+//        userTakeActivity.setUId("Uhdgkw766120e"); // 1库：Ukdli109op89oi 2库：Ukdli109op811d
+//        userTakeActivity.setTakeId(121019889410L);
+//        userTakeActivity.setActivityId(100001L);
+//        userTakeActivity.setActivityName("测试活动");
+//        userTakeActivity.setTakeDate(new Date());
+//        userTakeActivity.setTakeCount(10);
+//        userTakeActivity.setUuid("Uhdgkw766120d");
+//
+//        userTakeActivityDao.insert(userTakeActivity);
+//    }
 
-        userTakeActivityDao.insert(userTakeActivity);
-    }
+
+
 
 }
