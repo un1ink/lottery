@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.un1ink.infrastructure.dao.IUserTakeActivityDao">
+    <insert id="insert" parameterType="com.un1ink.infrastructure.po.UserTakeActivity">
+        INSERT INTO user_take_activity
+        (uId, takeId, activityId, activityName, takeDate, takeCount, uuid, createTime, updateTime)
+        VALUES
+            (#{uId}, #{takeId}, #{activityId}, #{activityName}, #{takeDate},#{takeCount},#{uuid}, #{createTime},#{updateTime})
+    </insert>
+    <!--add mapper-->
+</mapper>
