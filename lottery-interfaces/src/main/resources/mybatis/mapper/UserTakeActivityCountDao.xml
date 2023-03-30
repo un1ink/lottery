@@ -19,9 +19,9 @@
     
     <insert id="insert" parameterType="com.un1ink.infrastructure.po.UserTakeActivityCount">
         INSERT INTO user_take_activity_count
-        (id, uId, activityId, totalCount, leftCount, createTime, updateTime)
+        (uId, activityId, totalCount, leftCount, createTime, updateTime)
         VALUES
-        (#{id}, #{uId}, #{activityId}, #{totalCount}, #{leftCount}, NOW(), NOW())
+        (#{uId}, #{activityId}, #{totalCount}, #{leftCount}, NOW(), NOW())
     </insert>
 
     <update id="updateLeftCount" parameterType="com.un1ink.infrastructure.po.UserTakeActivityCount">

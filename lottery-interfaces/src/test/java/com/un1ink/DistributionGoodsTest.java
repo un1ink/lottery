@@ -38,7 +38,8 @@ public class DistributionGoodsTest {
 
         for(int i = 0; i < 10; i++){
             // 执行抽奖
-            DrawRes drawRes = drawExec.doDrawExec(new DrawReq("小傅哥", 100001L));
+
+            DrawRes drawRes = drawExec.doDrawExec(new DrawReq("小傅哥", 100001L,"temp_uuid"));
             // 判断抽奖结果
             Integer drawState = drawRes.getDrawState();
             if (DrawState.FAIL.getCode().equals(drawState)) {

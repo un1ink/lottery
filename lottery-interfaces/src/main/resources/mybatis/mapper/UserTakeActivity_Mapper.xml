@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.un1ink.infrastructure.dao.IUserTakeActivityDao">
+
+    <resultMap id="userTakeActivityMap" type="com.un1ink.infrastructure.po.UserTakeActivity">
+        <id column="id" property="id"/>
+        <result column="uId" property="uId"/>
+        <result column="takeId" property="takeId"/>
+        <result column="activityId" property="activityId"/>
+        <result column="activityName" property="activityName"/>
+        <result column="takeDate" property="takeDate"/>
+        <result column="takeCount" property="takeCount"/>
+        <result column="strategyId" property="strategyId"/>
+        <result column="state" property="state"/>
+        <result column="uuid" property="uuid"/>
+        <result column="createTime" property="createTime"/>
+        <result column="updateTime" property="updateTime"/>
+    </resultMap>
     <insert id="insert" parameterType="com.un1ink.infrastructure.po.UserTakeActivity">
         INSERT INTO user_take_activity
-        (uId, takeId, activityId, activityName, takeDate, takeCount, uuid, createTime, updateTime)
+        (uId, takeId, activityId, activityName, takeDate, takeCount, uuid, createTime, updateTime, state)
         VALUES
-            (#{uId}, #{takeId}, #{activityId}, #{activityName}, #{takeDate},#{takeCount},#{uuid}, NOW(), NOW())
+            (#{uId}, #{takeId}, #{activityId}, #{activityName}, #{takeDate},#{takeCount},#{uuid}, NOW(), NOW(), #{state})
     </insert>
+
+    <select id="queryNoConsumedTakeActivityOrder" parameterType="com.un1ink.infrastructure.po.UserTakeActivity" resultMap="userTakeActivityMap">
+        SELECT activityId, takeId, strategyId, state
+        FROM user_take_activity
+        WHERE state = 0 AND uId = #{uId} AND activityId = #{activityId}
+        ORDER BY id DESC
+        LIMIT 1
+    </select>
+    
+    <update id="lockTackActivity" parameterType="com.un1ink.infrastructure.po.UserTakeActivity">
+        UPDATE user_take_activity SET state = 1
+        WHERE uId = #{uId} AND activityId = #{activityId} AND state = 0
+    </update>
     <!--add mapper-->
 </mapper>

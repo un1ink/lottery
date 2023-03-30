@@ -46,6 +46,10 @@ public class UserTakeActivity {
      */
     private Integer takeCount;
     /**
+     * 活动单使用 0未使用 1已使用
+     */
+    private Integer state;
+    /**
      * 防重ID
      */
     private String uuid;

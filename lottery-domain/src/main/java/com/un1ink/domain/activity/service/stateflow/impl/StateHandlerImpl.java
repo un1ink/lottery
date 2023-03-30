@@ -48,7 +48,6 @@ public class StateHandlerImpl extends StateConfig implements IStateHandler {
     public Result open(Long activityId, Enum<ActivityState> currentStatus) {
         beforeAlter(currentStatus);
 
-        System.out.println("当前状态："+((ActivityState)currentStatus).getInfo());
         return stateGroup.get(currentStatus).open(activityId, currentStatus);
     }
 
@@ -59,7 +58,7 @@ public class StateHandlerImpl extends StateConfig implements IStateHandler {
     }
 
     public void beforeAlter(Enum<ActivityState> currentStatus){
-        System.out.printf(((ActivityState)currentStatus).getInfo());
+        // System.out.printf(((ActivityState)currentStatus).getInfo());
     }
 
 }

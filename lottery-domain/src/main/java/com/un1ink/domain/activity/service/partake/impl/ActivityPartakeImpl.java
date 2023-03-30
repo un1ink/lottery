@@ -5,6 +5,7 @@ import com.un1ink.common.constants.ActivityState;
 import com.un1ink.common.constants.IdGeneratorMethod;
 import com.un1ink.domain.activity.model.req.PartakeReq;
 import com.un1ink.domain.activity.model.vo.ActivityBillVO;
+import com.un1ink.domain.activity.model.vo.DrawOrderVO;
 import com.un1ink.domain.activity.repository.IUserTakeActivityRepository;
 import com.un1ink.domain.activity.service.partake.BaseActivityPartake;
 import com.un1ink.domain.support.ids.IIdGenerator;
@@ -12,6 +13,7 @@ import com.un1ink.common.constants.ResponseCode;
 import com.un1ink.middleware.db.router.strategy.IDBRouterStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionException;
@@ -63,7 +65,6 @@ public class ActivityPartakeImpl extends BaseActivityPartake {
         // 校验：个人库存 - 个人活动剩余可参与次数
         if(bill.getUserTakeLeftCount() == null){
             // 该用户未参加过该活动
-            System.out.println("该用户首次参加活动，无记录");
             return Result.buildSuccessResult();
         }
         if (bill.getUserTakeLeftCount() <= 0) {
@@ -107,6 +108,33 @@ public class ActivityPartakeImpl extends BaseActivityPartake {
                    return Result.buildResult(ResponseCode.INDEX_DUP);
                }
                return Result.buildSuccessResult();
+            });
+        } finally {
+            dbRouter.clear();
+        }
+    }
+
+    @Override
+    public Result recordDrawOrder(DrawOrderVO drawOrder) {
+        try {
+            dbRouter.doRouter(drawOrder.getUId());
+            return transactionTemplate.execute(status -> {
+                try {
+                    int lockCount = userTakeActivityRepository.lockTakeActivity(drawOrder.getUId(), drawOrder.getActivityId(), drawOrder.getTakeId());
+                    if(lockCount == 0) {
+                        status.setRollbackOnly();
+                        logger.error("记录中奖单，个人参与活动抽奖已消耗完 activityId：{} uId：{}", drawOrder.getActivityId(), drawOrder.getUId());
+                        return Result.buildResult(ResponseCode.INDEX_DUP);
+                    }
+
+                    // 保存抽奖信息
+                    userTakeActivityRepository.saveUserStrategyExport(drawOrder);
+                } catch (DuplicateKeyException e) {
+                    status.setRollbackOnly();
+                    logger.error("记录中奖单，唯一索引冲突 activityId:{}, uId:{}", drawOrder.getActivityId(), drawOrder.getUId());
+                    return Result.buildResult(ResponseCode.INDEX_DUP);
+                }
+                return Result.buildSuccessResult();
             });
         } finally {
             dbRouter.clear();

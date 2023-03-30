@@ -16,6 +16,10 @@ public class PartakeRes extends Result {
      * 策略id
      */
     private Long strategyId;
+    /**
+     * 策略id
+     */
+    private Long takeId;
     public PartakeRes(String code, String info) {
         super(code, info);
     }

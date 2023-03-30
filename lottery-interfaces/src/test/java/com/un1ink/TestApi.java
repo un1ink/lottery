@@ -41,10 +41,10 @@ public class TestApi {
 
             map.merge(idx, 1, Integer::sum);
 
-            System.out.println("斐波那契散列：" + idx + " 普通散列：" + (String.valueOf(i).hashCode() & (128 - 1)));
+            // System.out.println("斐波那契散列：" + idx + " 普通散列：" + (String.valueOf(i).hashCode() & (128 - 1)));
         }
 
-        System.out.println(map);
+        // System.out.println(map);
     }
 
     @Test

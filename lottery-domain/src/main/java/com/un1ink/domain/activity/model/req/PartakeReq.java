@@ -22,4 +22,10 @@ public class PartakeReq {
     private Long activityId;
 
     private Date partakeDate;
+
+    public PartakeReq(String uId, Long activityId) {
+        this.uId = uId;
+        this.activityId = activityId;
+        this.partakeDate = new Date();
+    }
 }

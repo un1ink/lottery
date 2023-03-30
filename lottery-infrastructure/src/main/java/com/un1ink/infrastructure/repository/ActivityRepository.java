@@ -113,7 +113,7 @@ public class ActivityRepository implements IActivityRepository {
         activityBillVO.setStockSurplusCount(activity.getStockSurplusCount());
         activityBillVO.setStrategyId(activity.getStrategyId());
         activityBillVO.setState(activity.getState());
-        System.out.println("userTakeActivityCount:" + userTakeActivityCount);
+        // System.out.println("userTakeActivityCount:" + userTakeActivityCount);
         activityBillVO.setUserTakeLeftCount(null == userTakeActivityCount ? null : userTakeActivityCount.getLeftCount());
 
         return activityBillVO;

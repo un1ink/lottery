@@ -1,4 +1,4 @@
-package com.un1ink;
+package com.un1ink.domain;
 
 import com.un1ink.domain.strategy.model.vo.AwardRateInfo;
 import com.un1ink.domain.strategy.service.algorithm.IDrawAlgorithm;

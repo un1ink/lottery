@@ -1,5 +1,6 @@
 package com.un1ink.infrastructure.dao;
 
+import com.un1ink.infrastructure.po.UserTakeActivity;
 import com.un1ink.infrastructure.po.UserTakeActivityCount;
 import com.un1ink.middleware.db.router.annotation.DBRouter;
 import org.apache.ibatis.annotations.Mapper;
@@ -24,8 +25,11 @@ public interface IUserTakeActivityCountDao {
     void insert(UserTakeActivityCount userTakeActivityCount);
 
     /**
+     * 更新用户剩余参加活动次数
+     *
      * @param userTakeActivityCount 用户信息(uId, activityId)
      * @return 更新数量
      */
     int updateLeftCount(UserTakeActivityCount userTakeActivityCount);
+
 }

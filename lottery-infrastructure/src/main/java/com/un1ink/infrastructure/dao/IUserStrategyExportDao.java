@@ -20,7 +20,7 @@ public interface IUserStrategyExportDao {
      * 新增数据
      * @param userStrategyExport 用户策略
      */
-    @DBRouter(key = "UId")
+    @DBRouter
     void insert(UserStrategyExport userStrategyExport);
 
     /**

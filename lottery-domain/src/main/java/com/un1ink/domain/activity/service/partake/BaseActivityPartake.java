@@ -37,8 +37,8 @@ public abstract class BaseActivityPartake extends ActivityPartakeSupport impleme
         if(!ResponseCode.SUCCESS.getCode().equals(grabResult.getCode())) {
             return new PartakeRes(grabResult.getCode(), grabResult.getInfo());
         }
-        // 封装结果【返回的策略ID，用于继续完成抽奖步骤】
 
+        // 封装结果【返回的策略ID，用于继续完成抽奖步骤】
         PartakeRes partakeRes = new PartakeRes(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getInfo());
         partakeRes.setStrategyId(activityBillVO.getStrategyId());
         return partakeRes;

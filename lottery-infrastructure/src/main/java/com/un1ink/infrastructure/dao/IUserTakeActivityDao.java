@@ -17,4 +17,19 @@ public interface IUserTakeActivityDao {
      * @param userTakeActivity 用户参加活动信息
      */
     void insert(UserTakeActivity userTakeActivity);
+
+    /**
+     * 查询有无未使用消费卷
+     * @param userTakeActivity
+     * @return 未使用活动卷的对象
+     */
+    UserTakeActivity queryNoConsumedTakeActivityOrder(UserTakeActivity userTakeActivity);
+    /**
+     * 锁定活动参加记录(将未使用的活动状态0置为1)
+     *
+     * @param userTakeActivity 用户参加活动请求
+     * @return 被锁定记录数
+     */
+    int lockTackActivity(UserTakeActivity userTakeActivity);
+
 }
