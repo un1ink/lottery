@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.un1ink.infrastructure.dao.IRuleTreeNodeLineDao">
+    <resultMap id="ruleTreeNodeLineResultMap" type="com.un1ink.infrastructure.po.RuleTreeNodeLine">
+        <id column="id" property="id"/>
+        <result column="treeId" property="treeId"/>
+        <result column="nodeIdFrom" property="nodeIdFrom"/>
+        <result column="nodeIdTo" property="nodeIdTo"/>
+        <result column="ruleLimitType" property="ruleLimitType"/>
+        <result column="ruleLimitValue" property="ruleLimitValue"/>
+    </resultMap>
+
+    <select id="queryRuleTreeNodeLineList" resultMap="ruleTreeNodeLineResultMap">
+        SELECT id, treeId, nodeIdFrom, nodeIdTo, ruleLimitType, ruleLimitValue
+        FROM rule_tree_node_line
+        where treeId = #{treeId} and nodeIdFrom = #{nodeIdFrom}
+    </select>
+
+    <select id="queryTreeNodeLineCount" resultType="java.lang.Integer">
+        select count(id) from rule_tree_node_line where treeId = #{treeId}
+    </select>
+    <!--add mapper-->
+</mapper>

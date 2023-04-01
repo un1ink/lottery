@@ -11,6 +11,7 @@ import com.un1ink.infrastructure.po.UserStrategyExport;
 import com.un1ink.infrastructure.po.UserTakeActivity;
 import com.un1ink.infrastructure.po.UserTakeActivityCount;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -20,7 +21,7 @@ import java.util.Date;
  * @author：un1ink
  * @date: 2023/3/29
  */
-@Component
+@Repository
 public class UserTakeActivityRepository implements IUserTakeActivityRepository {
 
     @Resource

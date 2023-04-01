@@ -1,6 +1,6 @@
 package com.un1ink.domain.award.service.goods;
 
-import com.un1ink.domain.award.repository.IAwardRepository;
+import com.un1ink.domain.award.repository.IOrderRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +15,7 @@ public class DistributionBase {
     protected Logger logger = LoggerFactory.getLogger(DistributionBase.class);
 
     @Resource
-    private IAwardRepository awardRepository;
+    private IOrderRepository awardRepository;
 
     protected void updateUserAwardState(String uId, String orderId, String awardId, Integer awardState, String awardStateInfo){
         // TODO 后期添加更新分库分表中，用户个人的抽奖记录表中奖品发奖状态

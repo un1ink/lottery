@@ -9,6 +9,7 @@ import com.un1ink.infrastructure.dao.*;
 import com.un1ink.infrastructure.po.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -20,7 +21,7 @@ import java.util.List;
  * @author：un1ink
  * @date: 2023/3/26
  */
-@Component
+@Repository
 public class ActivityRepository implements IActivityRepository {
     @Resource
     private IActivityDao activityDao;

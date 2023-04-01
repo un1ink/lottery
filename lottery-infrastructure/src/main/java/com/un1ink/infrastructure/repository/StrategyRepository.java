@@ -13,6 +13,7 @@ import com.un1ink.infrastructure.po.Strategy;
 import com.un1ink.infrastructure.po.StrategyDetail;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ import java.util.List;
 /**
  * @author un1ink
  */
-@Component
+@Repository
 public class StrategyRepository implements IStrategyRepository {
     @Resource
     private IStrategyDao strategyDao;
