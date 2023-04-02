@@ -1,22 +1,33 @@
-package com.un1ink.domain.strategy.model.vo;
+package com.un1ink.rpc.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.io.Serializable;
 
 /**
- * @description: 中奖信息信息
+ * @description:
  * @author：un1ink
- * @date: 2023/3/25
+ * @date: 2023/4/2
  */
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
 @Setter
-public class DrawAwardInfo {
+@Getter
+public class AwardDTO implements Serializable {
+
+    /**
+     * 用户ID
+     */
+    private String userId;
+
+    /**
+     * 活动ID
+     */
+    private Long activityId;
+
     /**
      * 奖品ID
      */
@@ -46,8 +57,5 @@ public class DrawAwardInfo {
      * 发放奖品方式（1:即时、2:定时[含活动结束]、3:人工）
      */
     private Integer grantType;
-    /**
-     * 发奖时间
-     */
-    private Date grantDate;
+
 }

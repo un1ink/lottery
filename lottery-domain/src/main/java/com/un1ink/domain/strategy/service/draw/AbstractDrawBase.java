@@ -14,9 +14,6 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.un1ink.common.constants.StrategyMode.SINGLE;
-import com.un1ink.common.constants.DrawState;
-
 /**
  * @description:
  * @author：un1ink
@@ -73,11 +70,11 @@ public abstract class AbstractDrawBase extends DrawStrategySupport implements ID
             return;
         }
 
-        List<AwardRateInfo> awardRateInfoList = new ArrayList<>(strategyDetailList.size());
+        List<AwardRateVO> awardRateVOList = new ArrayList<>(strategyDetailList.size());
         for (StrategyDetailBriefVO strategyDetail : strategyDetailList) {
-            awardRateInfoList.add(new AwardRateInfo(strategyDetail.getAwardId(), strategyDetail.getAwardRate()));
+            awardRateVOList.add(new AwardRateVO(strategyDetail.getAwardId(), strategyDetail.getAwardRate()));
         }
-        drawAlgorithm.initRateTuple(strategyId, awardRateInfoList);
+        drawAlgorithm.initRateTuple(strategyId, awardRateVOList);
     }
 
     private DrawRes buildDrawResult(String uId, Long strategyId, String awardId, StrategyBriefVO strategy) {
@@ -87,17 +84,17 @@ public abstract class AbstractDrawBase extends DrawStrategySupport implements ID
         }
 
         AwardBriefVO award = super.queryAwardInfoByAwardId(awardId);
-        DrawAwardInfo drawAwardInfo = new DrawAwardInfo();
-        drawAwardInfo.setAwardId(award.getAwardId());
-        drawAwardInfo.setAwardName(award.getAwardName());
-        drawAwardInfo.setAwardType(award.getAwardType());
-        drawAwardInfo.setAwardContent(award.getAwardContent());
-        drawAwardInfo.setStrategyMode(strategy.getStrategyMode());
-        drawAwardInfo.setGrantType(strategy.getGrantType());
-        drawAwardInfo.setGrantDate(strategy.getGrantDate());
+        DrawAwardVO drawAwardVO = new DrawAwardVO();
+        drawAwardVO.setAwardId(award.getAwardId());
+        drawAwardVO.setAwardName(award.getAwardName());
+        drawAwardVO.setAwardType(award.getAwardType());
+        drawAwardVO.setAwardContent(award.getAwardContent());
+        drawAwardVO.setStrategyMode(strategy.getStrategyMode());
+        drawAwardVO.setGrantType(strategy.getGrantType());
+        drawAwardVO.setGrantDate(strategy.getGrantDate());
 
         logger.info("执行策略抽奖完成【已中奖】，用户：{} 策略ID：{} 奖品ID：{} 奖品名称：{}", uId, strategyId, awardId, award.getAwardName());
-        return new DrawRes(uId, strategyId, DrawState.SUCCESS.getCode(), drawAwardInfo);
+        return new DrawRes(uId, strategyId, DrawState.SUCCESS.getCode(), drawAwardVO);
 
 
     }

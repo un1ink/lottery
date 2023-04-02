@@ -1,6 +1,6 @@
 package com.un1ink.domain.strategy.service.algorithm.impl;
 
-import com.un1ink.domain.strategy.model.vo.AwardRateInfo;
+import com.un1ink.domain.strategy.model.vo.AwardRateVO;
 import com.un1ink.domain.strategy.service.algorithm.BaseAlgorithm;
 import org.springframework.stereotype.Component;
 
@@ -19,17 +19,17 @@ public class DefaultRateRandomDrawAlgorithm extends BaseAlgorithm {
     public String randomDraw(Long strategyId, List<String> excludeAwardIds) {
         BigDecimal differenceDenominator = BigDecimal.ZERO;
 
-        List<AwardRateInfo> differenceAwardRateList = new ArrayList<>();
-        List<AwardRateInfo> awardRateIntervalValList = awardRateInfoMap.get(strategyId);
+        List<AwardRateVO> differenceAwardRateList = new ArrayList<>();
+        List<AwardRateVO> awardRateIntervalValList = awardRateInfoMap.get(strategyId);
 
         // 排除掉不在抽奖范围的奖品ID
-        for(AwardRateInfo awardRateInfo : awardRateIntervalValList) {
-            String awardId = awardRateInfo.getAwardId();
+        for(AwardRateVO awardRateVO : awardRateIntervalValList) {
+            String awardId = awardRateVO.getAwardId();
             if(excludeAwardIds.contains(awardId)) {
                 continue;
             }
-            differenceAwardRateList.add(awardRateInfo);
-            differenceDenominator = differenceDenominator.add(awardRateInfo.getAwardRate());
+            differenceAwardRateList.add(awardRateVO);
+            differenceDenominator = differenceDenominator.add(awardRateVO.getAwardRate());
         }
 
 
@@ -46,10 +46,10 @@ public class DefaultRateRandomDrawAlgorithm extends BaseAlgorithm {
 
         String awardId = "";
         int cursorVal = 0;
-        for(AwardRateInfo awardRateInfo : differenceAwardRateList) {
-            int rateVal = awardRateInfo.getAwardRate().divide(differenceDenominator, 2, BigDecimal.ROUND_UP).multiply(new BigDecimal(100)).intValue();
+        for(AwardRateVO awardRateVO : differenceAwardRateList) {
+            int rateVal = awardRateVO.getAwardRate().divide(differenceDenominator, 2, BigDecimal.ROUND_UP).multiply(new BigDecimal(100)).intValue();
             if(randomVal <= (cursorVal + rateVal)) {
-                awardId = awardRateInfo.getAwardId();
+                awardId = awardRateVO.getAwardId();
                 break;
             }
             cursorVal += rateVal;

@@ -3,6 +3,7 @@ package com.un1ink.application.process.impl;
 import com.un1ink.application.process.IActivityProcess;
 import com.un1ink.application.process.req.DrawProcessReq;
 import com.un1ink.application.process.res.DrawProcessRes;
+import com.un1ink.application.process.res.RuleQuantificationCrowdResult;
 import com.un1ink.common.constants.DrawState;
 import com.un1ink.common.constants.GrantState;
 import com.un1ink.common.constants.IdGeneratorMethod;
@@ -11,11 +12,15 @@ import com.un1ink.domain.activity.model.req.PartakeReq;
 import com.un1ink.domain.activity.model.res.PartakeRes;
 import com.un1ink.domain.activity.model.vo.DrawOrderVO;
 import com.un1ink.domain.activity.service.partake.IActivityPartake;
+import com.un1ink.domain.rule.model.req.DecisionMatterReq;
+import com.un1ink.domain.rule.model.res.EngineRes;
+import com.un1ink.domain.rule.service.engine.IEngineFilter;
 import com.un1ink.domain.strategy.model.req.DrawReq;
 import com.un1ink.domain.strategy.model.res.DrawRes;
-import com.un1ink.domain.strategy.model.vo.DrawAwardInfo;
+import com.un1ink.domain.strategy.model.vo.DrawAwardVO;
 import com.un1ink.domain.strategy.service.draw.IDrawExec;
 import com.un1ink.domain.support.ids.IIdGenerator;
+import org.apache.tomcat.util.digester.Rule;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -39,6 +44,9 @@ public class ActivityProcessImpl implements IActivityProcess {
     @Resource
     private Map<IdGeneratorMethod, IIdGenerator> idGeneratorMap;
 
+    @Resource
+    private IEngineFilter engineFilter;
+
 
     @Override
     public DrawProcessRes doDrawProcess(DrawProcessReq req) {
@@ -56,19 +64,34 @@ public class ActivityProcessImpl implements IActivityProcess {
         if (DrawState.FAIL.getCode().equals(drawRes.getDrawState())) {
             return new DrawProcessRes(ResponseCode.LOSING_DRAW.getInfo(), ResponseCode.LOSING_DRAW.getInfo());
         }
-        DrawAwardInfo drawAwardInfo = drawRes.getDrawAwardInfo();
+        DrawAwardVO drawAwardVO = drawRes.getDrawAwardVO();
 
         // 3. 结果落库
-        activityPartake.recordDrawOrder(buildDrawOrderVO(req, drawRes.getStrategyId(), takeId, drawAwardInfo));
+        activityPartake.recordDrawOrder(buildDrawOrderVO(req, drawRes.getStrategyId(), takeId, drawAwardVO));
 
         // 4. 发送MQ, 触发发奖流程
 
         // 5. 返回结果
-        return new DrawProcessRes(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getInfo(), drawAwardInfo);
+        return new DrawProcessRes(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getInfo(), drawAwardVO);
+    }
+
+    @Override
+    public RuleQuantificationCrowdResult doRuleQuantificationCrowd(DecisionMatterReq req) {
+        // 1.量化决策
+        EngineRes engineRes = engineFilter.process(req);
+
+        if(!engineRes.isSuccess()) {
+            return new RuleQuantificationCrowdResult(ResponseCode.RULE_ERR.getCode(), ResponseCode.RULE_ERR.getInfo());
+        }
+
+        // 2.封装结果
+        RuleQuantificationCrowdResult ruleQuantificationCrowdResult = new RuleQuantificationCrowdResult(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getInfo());
+        ruleQuantificationCrowdResult.setActivityId(Long.valueOf(engineRes.getNodeValue()));
+        return ruleQuantificationCrowdResult;
     }
 
 
-    private DrawOrderVO buildDrawOrderVO(DrawProcessReq req, Long strategyId, Long takeId, DrawAwardInfo drawAwardInfo) {
+    private DrawOrderVO buildDrawOrderVO(DrawProcessReq req, Long strategyId, Long takeId, DrawAwardVO drawAwardVO) {
         long orderId = idGeneratorMap.get(IdGeneratorMethod.SnowFlake).nextId();
         DrawOrderVO drawOrderVO = new DrawOrderVO();
         drawOrderVO.setUId(req.getUId());
@@ -76,14 +99,14 @@ public class ActivityProcessImpl implements IActivityProcess {
         drawOrderVO.setActivityId(req.getActivityId());
         drawOrderVO.setOrderId(orderId);
         drawOrderVO.setStrategyId(strategyId);
-        drawOrderVO.setStrategyMode(drawAwardInfo.getStrategyMode());
-        drawOrderVO.setGrantType(drawAwardInfo.getGrantType());
-        drawOrderVO.setGrantDate(drawAwardInfo.getGrantDate());
+        drawOrderVO.setStrategyMode(drawAwardVO.getStrategyMode());
+        drawOrderVO.setGrantType(drawAwardVO.getGrantType());
+        drawOrderVO.setGrantDate(drawAwardVO.getGrantDate());
         drawOrderVO.setGrantState(GrantState.INIT.getCode());
-        drawOrderVO.setAwardId(drawAwardInfo.getAwardId());
-        drawOrderVO.setAwardType(drawAwardInfo.getAwardType());
-        drawOrderVO.setAwardName(drawAwardInfo.getAwardName());
-        drawOrderVO.setAwardContent(drawAwardInfo.getAwardContent());
+        drawOrderVO.setAwardId(drawAwardVO.getAwardId());
+        drawOrderVO.setAwardType(drawAwardVO.getAwardType());
+        drawOrderVO.setAwardName(drawAwardVO.getAwardName());
+        drawOrderVO.setAwardContent(drawAwardVO.getAwardContent());
         return drawOrderVO;
     }
 

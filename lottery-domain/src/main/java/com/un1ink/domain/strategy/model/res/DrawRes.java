@@ -1,7 +1,7 @@
 package com.un1ink.domain.strategy.model.res;
 import com.un1ink.common.constants.DrawState;
 
-import com.un1ink.domain.strategy.model.vo.DrawAwardInfo;
+import com.un1ink.domain.strategy.model.vo.DrawAwardVO;
 import lombok.*;
 
 
@@ -32,6 +32,6 @@ public class DrawRes {
     /**
      * 奖品名称
      */
-    private DrawAwardInfo drawAwardInfo;
+    private DrawAwardVO drawAwardVO;
 
 }

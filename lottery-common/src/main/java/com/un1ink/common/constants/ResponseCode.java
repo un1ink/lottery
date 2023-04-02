@@ -24,8 +24,10 @@ public enum ResponseCode {
     INDEX_DUP("0003","SQL操作无更新"),
     /** SQL操作无更新 */
     NO_UPDATE("0004","SQL操作无更新"),
-    /** 未中奖奖 */
-    LOSING_DRAW("0005", "未中奖");
+    /** 未中奖 */
+    LOSING_DRAW("D001", "未中奖"),
+    /** 量化人群规则执行失败 */
+    RULE_ERR("D002", "未中奖");
 
     private String code;
     private String info;

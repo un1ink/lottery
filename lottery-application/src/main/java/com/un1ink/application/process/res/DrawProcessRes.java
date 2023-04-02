@@ -1,10 +1,9 @@
 package com.un1ink.application.process.res;
 
 import com.un1ink.common.Result;
-import com.un1ink.domain.strategy.model.vo.DrawAwardInfo;
+import com.un1ink.domain.strategy.model.vo.DrawAwardVO;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.stereotype.Service;
 
 /**
  * @description: 活动抽奖结果
@@ -14,11 +13,11 @@ import org.springframework.stereotype.Service;
 @Setter
 @Getter
 public class DrawProcessRes extends Result {
-    private DrawAwardInfo drawAwardInfo;
+    private DrawAwardVO drawAwardVO;
 
-    public DrawProcessRes(String code, String info, DrawAwardInfo drawAwardInfo){
+    public DrawProcessRes(String code, String info, DrawAwardVO drawAwardVO){
         super(code, info);
-        this.drawAwardInfo = drawAwardInfo;
+        this.drawAwardVO = drawAwardVO;
     }
 
     public DrawProcessRes(String code, String info){

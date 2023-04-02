@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @Setter
 @Getter
 @Builder
-public class AwardRateInfo {
+public class AwardRateVO {
     /**
      * 奖品id
      */

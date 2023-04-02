@@ -9,7 +9,7 @@ import com.un1ink.domain.award.service.factory.DistributionGoodsFactory;
 import com.un1ink.domain.award.service.goods.IDistributionGoods;
 import com.un1ink.domain.strategy.model.req.DrawReq;
 import com.un1ink.domain.strategy.model.res.DrawRes;
-import com.un1ink.domain.strategy.model.vo.DrawAwardInfo;
+import com.un1ink.domain.strategy.model.vo.DrawAwardVO;
 import com.un1ink.domain.strategy.service.draw.IDrawExec;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,17 +48,17 @@ public class DistributionGoodsTest {
             }
 
             // 封装发奖参数，orderId：2109313442431 为模拟ID，需要在用户参与领奖活动时生成
-            DrawAwardInfo drawAwardInfo = drawRes.getDrawAwardInfo();
+            DrawAwardVO drawAwardVO = drawRes.getDrawAwardVO();
             GoodsReq goodsReq = GoodsReq.builder()
                     .uId(drawRes.getUId())
                     .orderId("2109313442431")
-                    .awardId(drawAwardInfo.getAwardId())
-                    .awardName(drawAwardInfo.getAwardName())
-                    .awardContent(drawAwardInfo.getAwardContent())
+                    .awardId(drawAwardVO.getAwardId())
+                    .awardName(drawAwardVO.getAwardName())
+                    .awardContent(drawAwardVO.getAwardContent())
                     .build();
 
             // 根据 awardType 从抽奖工厂中获取对应的发奖服务
-            IDistributionGoods distributionGoodsService = distributionGoodsFactory.getDistributionGoodsService(drawAwardInfo.getAwardType());
+            IDistributionGoods distributionGoodsService = distributionGoodsFactory.getDistributionGoodsService(drawAwardVO.getAwardType());
             DistributionRes distributionRes = distributionGoodsService.doDistribution(goodsReq);
 
             logger.info("测试结果：{}", JSON.toJSONString(distributionRes));
