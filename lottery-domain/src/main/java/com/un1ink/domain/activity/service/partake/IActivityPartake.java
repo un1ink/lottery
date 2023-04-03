@@ -5,6 +5,8 @@ import com.un1ink.domain.activity.model.req.PartakeReq;
 import com.un1ink.domain.activity.model.res.PartakeRes;
 import com.un1ink.domain.activity.model.vo.DrawOrderVO;
 
+import javax.websocket.SendResult;
+
 /**
  * @description: 抽奖活动参与接口
  * @author：un1ink
@@ -26,4 +28,6 @@ public interface IActivityPartake {
      * @return 保存结果
      */
     Result recordDrawOrder(DrawOrderVO drawOrder);
+
+
 }

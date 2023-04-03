@@ -1,5 +1,7 @@
 package com.un1ink.domain.award.service.goods.impl;
 
+import com.un1ink.common.constants.AwardState;
+import com.un1ink.common.constants.GrantState;
 import com.un1ink.domain.award.model.req.GoodsReq;
 import com.un1ink.domain.award.model.res.DistributionRes;
 import com.un1ink.domain.award.service.goods.DistributionBase;
@@ -19,13 +21,14 @@ public class RedeemCodeGoods extends DistributionBase implements IDistributionGo
 
     @Override
     public DistributionRes doDistribution(GoodsReq req) {
+        // 模拟调用兑换码
         logger.info("模拟调用兑换码 uId：{} awardContent：{}", req.getUId(), req.getAwardContent());
-        super.updateUserAwardState(req.getUId(), req.getOrderId(), req.getAwardId(),SUCCESS.getCode(), SUCCESS.getInfo() );
-        return new DistributionRes(req.getUId(), SUCCESS.getCode(), SUCCESS.getInfo(), null);
+
+        // 更新用户领奖结果
+        super.updateUserAwardState(req.getUId(), req.getOrderId(), req.getAwardId(), GrantState.COMPLETE.getCode());
+
+        return new DistributionRes(req.getUId(), AwardState.SUCCESS.getCode(), AwardState.SUCCESS.getInfo(), null);
     }
 
-    @Override
-    public Integer getDistributionGoodName() {
-        return AwardType.RedeemCodeGoods.getCode();
-    }
+
 }

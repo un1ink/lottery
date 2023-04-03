@@ -51,7 +51,7 @@ public class DistributionGoodsTest {
             DrawAwardVO drawAwardVO = drawRes.getDrawAwardVO();
             GoodsReq goodsReq = GoodsReq.builder()
                     .uId(drawRes.getUId())
-                    .orderId("2109313442431")
+                    .orderId(210931344231l)
                     .awardId(drawAwardVO.getAwardId())
                     .awardName(drawAwardVO.getAwardName())
                     .awardContent(drawAwardVO.getAwardContent())

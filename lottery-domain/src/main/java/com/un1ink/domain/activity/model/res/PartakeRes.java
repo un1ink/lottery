@@ -1,7 +1,9 @@
 package com.un1ink.domain.activity.model.res;
 
 import com.un1ink.common.Result;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -9,6 +11,7 @@ import lombok.Setter;
  * @author：un1ink
  * @date: 2023/3/29
  */
+
 @Getter
 @Setter
 public class PartakeRes extends Result {

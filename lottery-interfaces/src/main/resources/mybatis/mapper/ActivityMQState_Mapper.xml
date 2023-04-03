@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.un1ink.infrastructure.dao.IActivityMQStateDao">
+    <!--add mapper-->
+
+    <insert id="insertInvoiceMqState" parameterType="com.un1ink.infrastructure.po.ActivityMQState">
+        INSERT INTO invoice_mq_state(uId, orderId, mqState, createTime)
+        VALUES ( #{uId}, #{orderId}, #{mqState}, NOW())
+    </insert>
+
+
+    <update id="updateInvoiceMqState" parameterType="com.un1ink.infrastructure.po.ActivityMQState">
+        UPDATE invoice_mq_state
+        SET mqState = #{mqState}
+        WHERE uId = #{uId} AND orderId = #{orderId}
+    </update>
+
+    <delete id="deleteInvoiceMqState" parameterType="com.un1ink.infrastructure.po.ActivityMQState">
+        delete FROM invoice_mq_state
+        WHERE uId = #{uId} AND orderId = #{orderId}
+    </delete>
+
+
+</mapper>

@@ -23,6 +23,7 @@ public interface IUserTakeActivityDao {
      * @param userTakeActivity
      * @return 未使用活动卷的对象
      */
+    @DBRouter
     UserTakeActivity queryNoConsumedTakeActivityOrder(UserTakeActivity userTakeActivity);
     /**
      * 锁定活动参加记录(将未使用的活动状态0置为1)

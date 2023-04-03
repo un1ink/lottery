@@ -3,9 +3,12 @@ package com.un1ink.domain.activity.service.partake.impl;
 import com.un1ink.common.Result;
 import com.un1ink.common.constants.ActivityState;
 import com.un1ink.common.constants.IdGeneratorMethod;
+import com.un1ink.common.constants.MQState;
 import com.un1ink.domain.activity.model.req.PartakeReq;
 import com.un1ink.domain.activity.model.vo.ActivityBillVO;
 import com.un1ink.domain.activity.model.vo.DrawOrderVO;
+import com.un1ink.domain.activity.model.vo.UserTakeActivityVO;
+import com.un1ink.domain.activity.repository.IActivityMQStateRepository;
 import com.un1ink.domain.activity.repository.IUserTakeActivityRepository;
 import com.un1ink.domain.activity.service.partake.BaseActivityPartake;
 import com.un1ink.domain.support.ids.IIdGenerator;
@@ -34,6 +37,10 @@ public class ActivityPartakeImpl extends BaseActivityPartake {
 
     @Resource
     private IUserTakeActivityRepository userTakeActivityRepository;
+
+    @Resource
+    private IActivityMQStateRepository activityMQStateRepository;
+
     @Resource
     private Map<IdGeneratorMethod, IIdGenerator> idGeneratorMap;
 
@@ -42,6 +49,11 @@ public class ActivityPartakeImpl extends BaseActivityPartake {
 
     @Resource
     private IDBRouterStrategy dbRouter;
+
+    @Override
+    protected UserTakeActivityVO queryNoConsumedTakeActivityOrder(Long activityId, String uId) {
+        return userTakeActivityRepository.queryNoConsumedTakeActivityOrder(activityId, uId);
+    }
 
     @Override
     protected Result checkActivity(PartakeReq req, ActivityBillVO bill) {
@@ -86,7 +98,7 @@ public class ActivityPartakeImpl extends BaseActivityPartake {
     }
 
     @Override
-    protected Result grabActivity(PartakeReq req, ActivityBillVO bill) {
+    protected Result grabActivity(PartakeReq req, ActivityBillVO bill, Long takeId) {
         try{
             dbRouter.doRouter(req.getUId());
             return transactionTemplate.execute(status -> {
@@ -99,7 +111,6 @@ public class ActivityPartakeImpl extends BaseActivityPartake {
                        return Result.buildResult(ResponseCode.NO_UPDATE);
                    }
                    // 插入领取活动信息
-                   Long takeId = idGeneratorMap.get(IdGeneratorMethod.SnowFlake).nextId();
                    userTakeActivityRepository.takeActivity(bill.getActivityId(), bill.getActivityName(), bill.getTakeCount(), bill.getUserTakeLeftCount(), bill.getUId(), req.getPartakeDate(), takeId);
                } catch (Exception e) {
                    // 如果触发一般是takeActivity异常
@@ -129,6 +140,9 @@ public class ActivityPartakeImpl extends BaseActivityPartake {
 
                     // 保存抽奖信息
                     userTakeActivityRepository.saveUserStrategyExport(drawOrder);
+                    // 本地消息表mq状态
+                    activityMQStateRepository.insertInvoiceMqState(drawOrder.getUId(), drawOrder.getActivityId(), MQState.INIT.getCode());
+
                 } catch (DuplicateKeyException e) {
                     status.setRollbackOnly();
                     logger.error("记录中奖单，唯一索引冲突 activityId:{}, uId:{}", drawOrder.getActivityId(), drawOrder.getUId());
@@ -140,4 +154,6 @@ public class ActivityPartakeImpl extends BaseActivityPartake {
             dbRouter.clear();
         }
     }
+
+
 }

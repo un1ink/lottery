@@ -31,12 +31,12 @@ public class ActivityProcessTest {
     @Test
     public void test_doDrawProcess() {
         DrawProcessReq req = new DrawProcessReq();
-        req.setUId("fustack2");
+        req.setUId("un1ink_0403");
         req.setActivityId(100001L);
-        DrawProcessRes drawProcessRes = activityProcess.doDrawProcess(req);
+        DrawProcessRes drawProcessResult = activityProcess.doDrawProcess(req);
 
         logger.info("请求入参：{}", JSON.toJSONString(req));
-        logger.info("测试结果：{}", JSON.toJSONString(drawProcessRes));
+        logger.info("测试结果：{}", JSON.toJSONString(drawProcessResult));
     }
 
 }

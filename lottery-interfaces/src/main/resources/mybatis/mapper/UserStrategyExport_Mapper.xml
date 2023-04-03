@@ -19,5 +19,11 @@
         FROM user_strategy_export
         WHERE uId = #{uId}
     </select>
+
+    <update id="updateUserAwardState" parameterType="com.un1ink.infrastructure.po.UserStrategyExport">
+        UPDATE user_strategy_export
+        SET grantState = #{grantState}, grantDate = NOW(), updateTime = NOW()
+        WHERE uId = #{uId} AND orderId = #{orderId} AND awardId = awardId
+    </update>
     <!--add mapper-->
 </mapper>

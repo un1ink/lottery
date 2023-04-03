@@ -18,10 +18,4 @@ public interface IDistributionGoods {
      */
     DistributionRes doDistribution(GoodsReq req);
 
-    /**
-     * 获取配送奖品名称
-     *
-     * @return 配送结果
-     */
-    Integer getDistributionGoodName();
 }
