@@ -6,6 +6,8 @@ import com.un1ink.infrastructure.po.Activity;
 import com.un1ink.infrastructure.po.AlterState;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * @author un1ink
  */
@@ -38,11 +40,22 @@ public interface IActivityDao {
     /**
      * 扣减活动库存
      * @param activityId   活动ID
-     * @return 结果
+     * @return 数据库更新条数
      */
     int subtractionActivityStock(Long activityId);
 
-
+    /**
+     * 扫描PASS活动
+     * @param id   活动自增ID
+     * @return 活动列表
+     */
+    List<Activity> scanPassActivityList(Long id);
+    /**
+     * 扫描DOING活动
+     * @param id   活动自增ID
+     * @return 活动列表
+     */
+    List<Activity> scanDoingActivityList(Long id);
 
 
 

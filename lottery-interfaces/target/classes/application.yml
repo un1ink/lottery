@@ -81,3 +81,19 @@ dubbo:
     port: 20880
   scan:
     base-packages: com.un1ink.rpc
+
+
+xxl:
+  job:
+    server:
+      port:7377
+    admin:
+      addresses: http://10.12.182.173:7373/xxl-job-admin
+    executor:
+      address:
+      appname: lottery-job
+      ip:
+      port: 9377
+      logpath: C:/workspace/xxl-job-2.4.0/xxl-log/data/applogs/xxl-job/jobhandler
+      logretentiondays: 50
+    accessToken: default_token

@@ -65,5 +65,12 @@ public interface IActivityRepository {
      */
     int subtractionActivityStock(Long activityId);
 
+    /**
+     * 扫描活动id
+     * @param id 活动的自增id, 非activityId
+     * @return 活动列表
+     */
+    List<ActivityVO> scanToDoActivityList(Long id, Integer activityState);
+
 
 }

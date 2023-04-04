@@ -2,6 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.un1ink.infrastructure.dao.IActivityDao">
 
+    <resultMap id="activityMap" type="com.un1ink.infrastructure.po.Activity">
+        <id column="id" property="id"/>
+        <result column="activityId" property="activityId"/>
+        <result column="activityName" property="activityName"/>
+        <result column="activityDesc" property="activityDesc"/>
+        <result column="beginDateTime" property="beginDateTime"/>
+        <result column="endDateTime" property="endDateTime"/>
+        <result column="stockCount" property="stockCount"/>
+        <result column="stockSurplusCount" property="stockSurplusCount"/>
+        <result column="takeCount" property="takeCount"/>
+        <result column="strategyId" property="strategyId"/>
+        <result column="state" property="state"/>
+        <result column="creator" property="creator"/>
+        <result column="createTime" property="createTime"/>
+        <result column="updateTime" property="updateTime"/>
+    </resultMap>
+
     <insert id="insert" parameterType="com.un1ink.infrastructure.po.Activity">
         INSERT INTO activity
         (activityId, activityName, activityDesc, strategyId, beginDateTime, endDateTime,
@@ -11,7 +28,7 @@
         #{stockCount},#{stockSurplusCount}, #{takeCount}, #{state}, #{creator}, now(), now())
     </insert>
 
-    <select id="queryActivityById" parameterType="java.lang.Long" resultType="com.un1ink.infrastructure.po.Activity">
+    <select id="queryActivityById" parameterType="java.lang.Long" resultMap="activityMap">
         SELECT activityId, activityName, activityDesc, strategyId,beginDateTime, endDateTime,
         stockCount,stockSurplusCount, takeCount, state, creator, createTime, updateTime
         FROM activity
@@ -29,5 +46,21 @@
         SET stockSurplusCount = stockSurplusCount - 1
         WHERE activityId = #{activityId} AND stockSurplusCount > 0
     </update>
+
+    <select id="scanPassActivityList" parameterType="java.lang.Long" resultMap="activityMap">
+        SELECT id, activityId, activityName, activityDesc, strategyId, beginDateTime, endDateTime, stockCount, stockSurplusCount, takeCount, state, creator, createTime, updateTime
+        FROM activity
+        WHERE id > #{id} AND state = 4
+        ORDER BY id ASC
+        LIMIT 10
+    </select>
+
+    <select id="scanDoingActivityList" parameterType="java.lang.Long" resultMap="activityMap">
+        SELECT id, activityId, activityName, activityDesc, strategyId, beginDateTime, endDateTime, stockCount, stockSurplusCount, takeCount, state, creator, createTime, updateTime
+        FROM activity
+        WHERE id > #{id} AND state = 5
+        ORDER BY id ASC
+        LIMIT 10
+    </select>
 
 </mapper>

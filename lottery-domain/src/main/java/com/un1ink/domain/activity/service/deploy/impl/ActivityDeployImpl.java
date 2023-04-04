@@ -67,6 +67,10 @@ public class ActivityDeployImpl implements IActivityDeploy {
         /**
          * TODO: 更新活动，后续补充
          */
+    }
 
+    @Override
+    public List<ActivityVO> scanToDoActivityList(Long id, Integer state) {
+        return activityRepository.scanToDoActivityList(id, state);
     }
 }
