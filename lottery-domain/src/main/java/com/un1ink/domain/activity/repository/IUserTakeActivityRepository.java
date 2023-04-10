@@ -1,9 +1,12 @@
 package com.un1ink.domain.activity.repository;
 
+import com.un1ink.domain.activity.model.vo.ActivityMQStateVO;
 import com.un1ink.domain.activity.model.vo.DrawOrderVO;
+import com.un1ink.domain.activity.model.vo.InvoiceVO;
 import com.un1ink.domain.activity.model.vo.UserTakeActivityVO;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @description: 用户参加活动窗口
@@ -65,6 +68,13 @@ public interface IUserTakeActivityRepository {
      * @return 领取单
      */
     UserTakeActivityVO queryNoConsumedTakeActivityOrder(Long activityId, String uId);
+    /**
+     * 获取消息丢失的Invoice对象
+     * @param uId 用户id
+     * @param orderId 订单id
+     * @return 发票信息
+     */
+    public InvoiceVO getInvoiceByActivityMQState(String uId, Long orderId);
 
 
 

@@ -88,25 +88,24 @@ public class ActivityProcessImpl implements IActivityProcess {
         // 4. 发送MQ, 触发发奖流程,
 
         InvoiceVO invoiceVO = buildInvoiceVO(drawOrderVO);
-
         ListenableFuture<SendResult<String, Object>> future = kafkaProducer.sendLotteryInvoice(invoiceVO);
 
 
 
         // 5. 异步监听发送结果
-        future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
-            @Override
-            public void onFailure(Throwable ex) {
-                // 4.1 MQ 消息发送失败，更新数据库表 user_strategy_export_mq.mqState = 2 【等待定时任务扫码补偿MQ消息】
-                activityMQStateRepository.updateInvoiceMqState(invoiceVO.getUId(), invoiceVO.getOrderId(), MQState.FAIL.getCode());
-            }
-
-            @Override
-            public void  onSuccess(SendResult<String, Object> result) {
-                // 4.2 MQ 消息发送完成，更新数据库表 user_strategy_export_mq.mqState = 1，删除本地消息表记录
-                activityMQStateRepository.deleteInvoiceMqState(invoiceVO.getUId(), invoiceVO.getOrderId(), MQState.COMPLETE.getCode());
-            }
-        });
+//        future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
+//            @Override
+//            public void onFailure(Throwable ex) {
+//                // 4.1 MQ 消息发送失败，更新数据库表 user_strategy_export_mq.mqState = 2 【等待定时任务扫码补偿MQ消息】
+//                activityMQStateRepository.updateInvoiceMqState(invoiceVO.getUId(), invoiceVO.getOrderId(), MQState.FAIL.getCode());
+//            }
+//
+//            @Override
+//            public void  onSuccess(SendResult<String, Object> result) {
+//                // 4.2 MQ 消息发送完成，更新数据库表 user_strategy_export_mq.mqState = 1，删除本地消息表记录
+//                activityMQStateRepository.deleteInvoiceMqState(invoiceVO.getUId(), invoiceVO.getOrderId(), MQState.COMPLETE.getCode());
+//            }
+//        });
 
 
         // 6. 返回结果

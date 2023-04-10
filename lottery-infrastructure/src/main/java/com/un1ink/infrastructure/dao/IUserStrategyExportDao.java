@@ -46,5 +46,8 @@ public interface IUserStrategyExportDao {
     @DBRouter
     void updateInvoiceMqState(UserStrategyExport userStrategyExport);
 
+    @DBRouter
+    UserStrategyExport getUserStrategyExportByActivityMQState(UserStrategyExport userStrategyExport);
+
 
 }

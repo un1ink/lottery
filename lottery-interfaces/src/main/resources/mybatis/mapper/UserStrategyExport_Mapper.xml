@@ -25,5 +25,11 @@
         SET grantState = #{grantState}, grantDate = NOW(), updateTime = NOW()
         WHERE uId = #{uId} AND orderId = #{orderId} AND awardId = awardId
     </update>
+
+    <select id="getUserStrategyExportByActivityMQState" parameterType="com.un1ink.infrastructure.po.UserStrategyExport" resultType="com.un1ink.infrastructure.po.UserStrategyExport">
+        SELECT id, uId, activityId, orderId, strategyId, strategyMode, grantType, grantDate, grantState, awardId, awardType, awardName, awardContent, uuid, createTime, updateTime
+        FROM user_strategy_export
+        WHERE uId = #{uId} AND orderId = #{orderId}
+    </select>
     <!--add mapper-->
 </mapper>

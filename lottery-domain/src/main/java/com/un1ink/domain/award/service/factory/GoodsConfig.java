@@ -31,6 +31,7 @@ public class GoodsConfig {
 
     @PostConstruct
     public void init(){
+
         goodsMap.put(AwardType.RedeemCodeGoods.getCode(), redeemCodeGoods);
         goodsMap.put(AwardType.CouponGoods.getCode(), couponGoods);
         goodsMap.put(AwardType.PhysicalGoods.getCode(), physicalGoods);

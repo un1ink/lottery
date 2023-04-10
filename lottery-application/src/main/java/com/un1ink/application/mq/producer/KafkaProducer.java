@@ -1,7 +1,9 @@
 package com.un1ink.application.mq.producer;
 
 import com.alibaba.fastjson.JSON;
+import com.un1ink.common.constants.MQState;
 import com.un1ink.domain.activity.model.vo.InvoiceVO;
+import com.un1ink.domain.activity.repository.IActivityMQStateRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -25,11 +27,28 @@ public class KafkaProducer {
     @Resource
     private KafkaTemplate<String, Object> kafkaTemplate;
 
-    public static final String TOPIC_INVOICE= "lotteryInvoice";
+    @Resource
+    IActivityMQStateRepository activityMQStateRepository;
+
+    public static final String TOPIC_INVOICE= "lotteryV6";
 
     public ListenableFuture<SendResult<String, Object>> sendLotteryInvoice(InvoiceVO invoiceVO) {
         String objJson = JSON.toJSONString(invoiceVO);
         logger.info("发送MQ消息 topic：{} bizId：{} message：{}", TOPIC_INVOICE, invoiceVO.getUId(), objJson);
-        return kafkaTemplate.send(TOPIC_INVOICE, objJson);
+        ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(TOPIC_INVOICE, objJson);
+        future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
+            @Override
+            public void onFailure(Throwable ex) {
+                // 1. MQ 消息发送失败，更新数据库表 user_strategy_export_mq.mqState = 2 【等待定时任务扫码补偿MQ消息】
+                activityMQStateRepository.updateInvoiceMqState(invoiceVO.getUId(), invoiceVO.getOrderId(), MQState.FAIL.getCode());
+            }
+
+            @Override
+            public void  onSuccess(SendResult<String, Object> result) {
+                // 2. MQ 消息发送完成，更新数据库表 user_strategy_export_mq.mqState = 1，删除本地消息表记录
+                activityMQStateRepository.deleteInvoiceMqState(invoiceVO.getUId(), invoiceVO.getOrderId(), MQState.COMPLETE.getCode());
+            }
+        });
+        return future;
     }
 }

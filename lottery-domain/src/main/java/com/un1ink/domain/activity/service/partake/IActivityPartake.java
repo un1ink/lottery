@@ -4,8 +4,10 @@ import com.un1ink.common.Result;
 import com.un1ink.domain.activity.model.req.PartakeReq;
 import com.un1ink.domain.activity.model.res.PartakeRes;
 import com.un1ink.domain.activity.model.vo.DrawOrderVO;
+import com.un1ink.domain.activity.model.vo.InvoiceVO;
 
 import javax.websocket.SendResult;
+import java.util.List;
 
 /**
  * @description: 抽奖活动参与接口
@@ -28,6 +30,14 @@ public interface IActivityPartake {
      * @return 保存结果
      */
     Result recordDrawOrder(DrawOrderVO drawOrder);
+
+    /**
+     * 扫描发货单 MQ 状态，把未发送 MQ 的单子扫描出来，做补偿
+     *
+     * @param dbCount 指定分库
+     * @return 发货单
+     */
+    List<InvoiceVO> scanInvoiceMqState(int dbCount);
 
 
 }

@@ -1,8 +1,11 @@
 package com.un1ink.infrastructure.dao;
 
+import com.un1ink.domain.activity.model.vo.ActivityMQStateVO;
 import com.un1ink.infrastructure.po.ActivityMQState;
 import com.un1ink.middleware.db.router.annotation.DBRouter;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * @description:
@@ -20,6 +23,9 @@ public interface IActivityMQStateDao {
 
     @DBRouter
     void deleteInvoiceMqState(ActivityMQState activityMQState);
+
+    @DBRouter
+    List<ActivityMQState> scanInvoiceMqState();
 
 
 }

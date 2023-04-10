@@ -20,5 +20,10 @@
         WHERE uId = #{uId} AND orderId = #{orderId}
     </delete>
 
+    <select id="scanInvoiceMqState" resultType="com.un1ink.infrastructure.po.ActivityMQState">
+        SELECT id, uId, orderId, mqState, createTime
+        FROM invoice_mq_state
+    </select>
+
 
 </mapper>

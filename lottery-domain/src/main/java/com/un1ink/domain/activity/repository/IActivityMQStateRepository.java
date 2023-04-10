@@ -1,5 +1,10 @@
 package com.un1ink.domain.activity.repository;
 
+import com.un1ink.domain.activity.model.vo.ActivityMQStateVO;
+import com.un1ink.domain.activity.model.vo.InvoiceVO;
+
+import java.util.List;
+
 /**
  * @description:
  * @author：un1ink
@@ -32,5 +37,11 @@ public interface IActivityMQStateRepository {
      * @param mqState MQ 发送状态
      */
     void insertInvoiceMqState(String uId, Long orderId, Integer mqState);
+
+    /**
+     * 扫描本地消息表
+     */
+
+    List<ActivityMQStateVO> scanInvoiceMqState();
 
 }

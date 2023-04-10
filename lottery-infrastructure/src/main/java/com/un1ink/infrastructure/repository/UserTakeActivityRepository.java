@@ -1,7 +1,10 @@
 package com.un1ink.infrastructure.repository;
 
+import com.alibaba.fastjson.JSON;
 import com.un1ink.common.constants.TakeState;
+import com.un1ink.domain.activity.model.vo.ActivityMQStateVO;
 import com.un1ink.domain.activity.model.vo.DrawOrderVO;
+import com.un1ink.domain.activity.model.vo.InvoiceVO;
 import com.un1ink.domain.activity.model.vo.UserTakeActivityVO;
 import com.un1ink.domain.activity.repository.IUserTakeActivityRepository;
 import com.un1ink.infrastructure.dao.IUserStrategyExportDao;
@@ -10,11 +13,13 @@ import com.un1ink.infrastructure.dao.IUserTakeActivityDao;
 import com.un1ink.infrastructure.po.UserStrategyExport;
 import com.un1ink.infrastructure.po.UserTakeActivity;
 import com.un1ink.infrastructure.po.UserTakeActivityCount;
+import org.apache.catalina.User;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @description:
@@ -119,6 +124,24 @@ public class UserTakeActivityRepository implements IUserTakeActivityRepository {
         userTakeActivityVO.setState(noConsumedTakeActivityOrder.getState());
 
         return userTakeActivityVO;
-
     }
+
+    @Override
+    public InvoiceVO getInvoiceByActivityMQState(String uId, Long orderId) {
+        UserStrategyExport userStrategyExport = new UserStrategyExport();
+        userStrategyExport.setUId(uId);
+        userStrategyExport.setOrderId(orderId);
+        UserStrategyExport lossUserStrategyExport =  userStrategyExportDao.getUserStrategyExportByActivityMQState(userStrategyExport);
+//        logger.info("invoiceVO:{}"+ JSON.toJSONString(invoiceVO));
+        InvoiceVO invoiceVO = new InvoiceVO();
+        invoiceVO.setUId(lossUserStrategyExport.getUId());
+        invoiceVO.setOrderId(lossUserStrategyExport.getOrderId());
+        invoiceVO.setAwardId(lossUserStrategyExport.getAwardId());
+        invoiceVO.setAwardType(lossUserStrategyExport.getAwardType());
+        invoiceVO.setAwardName(lossUserStrategyExport.getAwardName());
+        invoiceVO.setAwardContent(lossUserStrategyExport.getAwardContent());
+        return invoiceVO;
+    }
+
+
 }

@@ -1,16 +1,16 @@
 package com.un1ink.domain.activity.service.partake.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.un1ink.common.Result;
 import com.un1ink.common.constants.ActivityState;
 import com.un1ink.common.constants.IdGeneratorMethod;
 import com.un1ink.common.constants.MQState;
 import com.un1ink.domain.activity.model.req.PartakeReq;
-import com.un1ink.domain.activity.model.vo.ActivityBillVO;
-import com.un1ink.domain.activity.model.vo.DrawOrderVO;
-import com.un1ink.domain.activity.model.vo.UserTakeActivityVO;
+import com.un1ink.domain.activity.model.vo.*;
 import com.un1ink.domain.activity.repository.IActivityMQStateRepository;
 import com.un1ink.domain.activity.repository.IUserTakeActivityRepository;
 import com.un1ink.domain.activity.service.partake.BaseActivityPartake;
+import com.un1ink.domain.activity.service.partake.IActivityPartake;
 import com.un1ink.domain.support.ids.IIdGenerator;
 import com.un1ink.common.constants.ResponseCode;
 import com.un1ink.middleware.db.router.strategy.IDBRouterStrategy;
@@ -23,6 +23,8 @@ import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -141,7 +143,7 @@ public class ActivityPartakeImpl extends BaseActivityPartake {
                     // 保存抽奖信息
                     userTakeActivityRepository.saveUserStrategyExport(drawOrder);
                     // 本地消息表mq状态
-                    activityMQStateRepository.insertInvoiceMqState(drawOrder.getUId(), drawOrder.getActivityId(), MQState.INIT.getCode());
+                    activityMQStateRepository.insertInvoiceMqState(drawOrder.getUId(), drawOrder.getOrderId(), MQState.INIT.getCode());
 
                 } catch (DuplicateKeyException e) {
                     status.setRollbackOnly();
@@ -151,6 +153,36 @@ public class ActivityPartakeImpl extends BaseActivityPartake {
                 return Result.buildSuccessResult();
             });
         } finally {
+            dbRouter.clear();
+        }
+    }
+
+    @Override
+    public List<InvoiceVO> scanInvoiceMqState(int dbCount) {
+
+        try {
+            dbRouter.setDBKey(dbCount);
+            dbRouter.setTBKey(0);
+            List<InvoiceVO> InvoiceVOList = new ArrayList<>();
+            List<ActivityMQStateVO> activityMQStateVOList = activityMQStateRepository.scanInvoiceMqState();
+            if (0 == activityMQStateVOList.size()) {
+                logger.info("数据库 {} 无消息丢失，扫描完成", dbCount);
+                return InvoiceVOList;
+            }
+
+            for (ActivityMQStateVO activityMQStateVO : activityMQStateVOList) {
+                InvoiceVO invoiceVO = userTakeActivityRepository.getInvoiceByActivityMQState(activityMQStateVO.getUId(), activityMQStateVO.getOrderId());
+                logger.info("invoiceVO:{}", JSON.toJSONString(invoiceVO));
+                InvoiceVOList.add(invoiceVO);
+            }
+            return InvoiceVOList;
+
+        } catch (Exception e){
+            logger.info("获取本地消息表中丢失消息失败！");
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+        finally {
             dbRouter.clear();
         }
     }

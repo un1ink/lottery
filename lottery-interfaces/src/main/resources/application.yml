@@ -49,19 +49,19 @@ mini-db-router:
       list: db01,db02
       db00:
         driver-class-name: com.mysql.jdbc.Driver
-        url: jdbc:mysql://127.0.0.1:3307/lottery?useUnicode=true
+        url: jdbc:mysql://8.130.112.217:3306/lottery?useUnicode=true
         username: root
-        password: root
+        password: Ali@0405
       db01:
         driver-class-name: com.mysql.jdbc.Driver
-        url: jdbc:mysql://127.0.0.1:3307/lottery_01?useUnicode=true
+        url: jdbc:mysql://8.130.112.217:3306/lottery_01?useUnicode=true
         username: root
-        password: root
+        password: Ali@0405
       db02:
         driver-class-name: com.mysql.jdbc.Driver
-        url: jdbc:mysql://127.0.0.1:3307/lottery_02?useUnicode=true
+        url: jdbc:mysql://8.130.112.217:3306/lottery_02?useUnicode=true
         username: root
-        password: root
+        password: Ali@0405
 
 mybatis:
   mapper-locations: classpath:/mybatis/mapper/*.xml
