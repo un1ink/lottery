@@ -39,7 +39,8 @@ public class ActivityBillVO {
     private Integer state;
     /** 用户可参与次数 */
     private Integer takeCount;
-
+    /** 库存 */
+    private Integer stockCount;
     /** 用户剩余参与次数 */
     private Integer userTakeLeftCount;
 

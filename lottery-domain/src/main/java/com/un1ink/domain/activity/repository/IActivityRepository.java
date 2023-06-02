@@ -2,6 +2,7 @@ package com.un1ink.domain.activity.repository;
 
 import com.un1ink.common.constants.ActivityState;
 import com.un1ink.domain.activity.model.req.PartakeReq;
+import com.un1ink.domain.activity.model.res.StockRes;
 import com.un1ink.domain.activity.model.vo.*;
 
 import java.util.List;
@@ -71,6 +72,26 @@ public interface IActivityRepository {
      * @return 活动列表
      */
     List<ActivityVO> scanToDoActivityList(Long id, Integer activityState);
+
+    /**
+     * 扣减活动库存，通过Redis
+     *
+     * @param uId        用户ID
+     * @param activityId 活动ID
+     * @param stockCount 总库存
+     * @return 扣减结果
+     */
+    StockRes subtractionActivityStockByRedis(String uId, Long activityId, Integer stockCount);
+
+    /**
+     * 恢复活动库存，通过Redis 【如果非常异常，则需要进行缓存库存恢复，只保证不超卖的特性，所以不保证一定能恢复占用库存，另外最终可以由任务进行补偿库存】
+     *
+     * @param activityId    活动ID
+     * @param tokenKey      分布式 KEY 用于清理
+     * @param code          状态
+     */
+    void recoverActivityCacheStockByRedis(Long activityId, String tokenKey, String code);
+
 
 
 }

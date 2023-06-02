@@ -1,16 +1,19 @@
 package com.un1ink.infrastructure.repository;
 
 import com.un1ink.common.constants.ActivityState;
+import com.un1ink.common.constants.RedisKey;
 import com.un1ink.domain.activity.model.req.PartakeReq;
+import com.un1ink.domain.activity.model.res.StockRes;
 import com.un1ink.domain.activity.repository.IActivityRepository;
 import com.un1ink.domain.activity.model.vo.*;
-import com.un1ink.domain.activity.repository.IUserTakeActivityRepository;
+import com.un1ink.common.constants.ResponseCode;
 import com.un1ink.infrastructure.dao.*;
 import com.un1ink.infrastructure.po.*;
+import com.un1ink.infrastructure.util.RedisUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -35,6 +38,11 @@ public class ActivityRepository implements IActivityRepository {
     @Resource
     private IUserTakeActivityCountDao userTakeActivityCountDao;
 
+    @Resource
+    private RedisUtils redisUtils;
+
+    private final Logger logger = LoggerFactory.getLogger(ActivityRepository.class);
+
     @Override
     public void addActivity(ActivityVO activity) {
         Activity req = new Activity();
@@ -44,7 +52,7 @@ public class ActivityRepository implements IActivityRepository {
 
     @Override
     public ActivityVO queryActivityById(Long activityId) {
-        Activity activity =  activityDao.queryActivityById(activityId);
+        Activity activity = activityDao.queryActivityById(activityId);
         ActivityVO activityVO = new ActivityVO();
         BeanUtils.copyProperties(activity, activityVO);
         return activityVO;
@@ -84,7 +92,7 @@ public class ActivityRepository implements IActivityRepository {
 
     @Override
     public boolean alterStatus(Long activityId, Enum<ActivityState> beforeState, Enum<ActivityState> afterState) {
-        AlterStateVO alterStateVO = new AlterStateVO(activityId,((ActivityState) beforeState).getCode(),((ActivityState) afterState).getCode());
+        AlterStateVO alterStateVO = new AlterStateVO(activityId, ((ActivityState) beforeState).getCode(), ((ActivityState) afterState).getCode());
         AlterState alterState = new AlterState();
         BeanUtils.copyProperties(alterStateVO, alterState);
         int count = activityDao.alterState(alterState);
@@ -114,6 +122,8 @@ public class ActivityRepository implements IActivityRepository {
         activityBillVO.setStockSurplusCount(activity.getStockSurplusCount());
         activityBillVO.setStrategyId(activity.getStrategyId());
         activityBillVO.setState(activity.getState());
+        activityBillVO.setStockCount(activity.getStockCount());
+//        System.out.println("arepositoty"+req.getActivityId()+","+activity.getStockCount());
         // System.out.println("userTakeActivityCount:" + userTakeActivityCount);
         activityBillVO.setUserTakeLeftCount(null == userTakeActivityCount ? null : userTakeActivityCount.getLeftCount());
 
@@ -130,7 +140,7 @@ public class ActivityRepository implements IActivityRepository {
 
         List<Activity> activityList;
 
-        if(ActivityState.DOING.getCode().equals(activityState)) {
+        if (ActivityState.DOING.getCode().equals(activityState)) {
             // scan doing
             activityList = activityDao.scanDoingActivityList(id);
         } else {
@@ -151,4 +161,39 @@ public class ActivityRepository implements IActivityRepository {
         return activityVOList;
     }
 
+    @Override
+    public StockRes subtractionActivityStockByRedis(String uId, Long activityId, Integer stockCount) {
+        //  1. 获取抽奖活动库存 Key
+        String stockKey = RedisKey.KEY_LOTTERY_ACTIVITY_STOCK_COUNT(activityId);
+        System.out.println("subtractionActivityStockByRedis-stockKey:" + stockKey);
+
+
+        // 2. 扣减库存，目前占用库存数
+        Integer stockUsedCount = (int) redisUtils.incr(stockKey, 1);
+
+        // 3. 超出库存判断，进行恢复原始库存
+        if (stockUsedCount > stockCount) {
+            redisUtils.decr(stockKey, 1);
+            logger.info("超出库存判断，进行恢复原始库存。stockUsedCount:{}，stockCount:{}", stockUsedCount, stockCount);
+            return new StockRes(ResponseCode.OUT_OF_STOCK.getCode(), ResponseCode.OUT_OF_STOCK.getInfo());
+        }
+
+        // 4. 以活动库存占用编号，生成对应加锁Key，细化锁的颗粒度
+        String stockTokenKey = RedisKey.KEY_LOTTERY_ACTIVITY_STOCK_COUNT_TOKEN(activityId, stockUsedCount);
+
+        // 5. 使用 Redis.setNx 加一个分布式锁
+        boolean lockToken = redisUtils.setNx(stockTokenKey, 350L);
+        if (!lockToken) {
+            logger.info("抽奖活动{}用户秒杀{}扣减库存，分布式锁失败：{}", activityId, uId, stockTokenKey);
+            return new StockRes(ResponseCode.ERR_TOKEN.getCode(), ResponseCode.ERR_TOKEN.getInfo());
+        }
+
+        return new StockRes(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getInfo(), stockTokenKey, stockCount - stockUsedCount);
+    }
+
+    @Override
+    public void recoverActivityCacheStockByRedis(Long activityId, String tokenKey, String code) {
+        // 删除分布式锁 Key
+        redisUtils.del(tokenKey);
+    }
 }

@@ -1,6 +1,8 @@
 server:
   port: 4488
 
+
+
 spring:
   kafka:
     bootstrap-servers: localhost:9092
@@ -38,6 +40,12 @@ spring:
       #listner负责ack，每调用一次，就立即commit
       ack-mode: manual_immediate
       missing-topics-fatal: false
+  redis:
+    database: 0
+    host: 10.12.182.173     # Redis服务器地址，修改为你的地址
+    port: 6379              # Redis服务器连接端口
+    password: redis          # Redis服务器连接密码（默认为空）
+    timeout: 10000           # Redis服务器链接超时配置
 
 mini-db-router:
   jdbc:
@@ -97,3 +105,4 @@ xxl:
       logpath: C:/workspace/xxl-job-2.4.0/xxl-log/data/applogs/xxl-job/jobhandler
       logretentiondays: 50
     accessToken: default_token
+

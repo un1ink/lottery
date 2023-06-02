@@ -1,9 +1,6 @@
 package com.un1ink.domain.activity.repository;
 
-import com.un1ink.domain.activity.model.vo.ActivityMQStateVO;
-import com.un1ink.domain.activity.model.vo.DrawOrderVO;
-import com.un1ink.domain.activity.model.vo.InvoiceVO;
-import com.un1ink.domain.activity.model.vo.UserTakeActivityVO;
+import com.un1ink.domain.activity.model.vo.*;
 
 import java.util.Date;
 import java.util.List;
@@ -75,6 +72,12 @@ public interface IUserTakeActivityRepository {
      * @return 发票信息
      */
     public InvoiceVO getInvoiceByActivityMQState(String uId, Long orderId);
+    /**
+     * 更新活动库存
+     *
+     * @param activityPartakeRecordVO   活动领取记录
+     */
+    public void updateActivityStock(ActivityPartakeRecordVO activityPartakeRecordVO);
 
 
 

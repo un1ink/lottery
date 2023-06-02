@@ -27,7 +27,11 @@ public enum ResponseCode {
     /** 未中奖 */
     LOSING_DRAW("D001", "未中奖"),
     /** 量化人群规则执行失败 */
-    RULE_ERR("D002", "未中奖");
+    RULE_ERR("D002", "未中奖"),
+    NOT_CONSUMED_TAKE("D003", "未消费活动领取记录"),
+
+    OUT_OF_STOCK("D004", "活动无库存"),
+    ERR_TOKEN("D005", "分布式锁失败");
 
     private String code;
     private String info;

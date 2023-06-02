@@ -3,6 +3,7 @@ package com.un1ink.domain.activity.service.partake;
 import com.un1ink.common.Result;
 import com.un1ink.domain.activity.model.req.PartakeReq;
 import com.un1ink.domain.activity.model.res.PartakeRes;
+import com.un1ink.domain.activity.model.vo.ActivityPartakeRecordVO;
 import com.un1ink.domain.activity.model.vo.DrawOrderVO;
 import com.un1ink.domain.activity.model.vo.InvoiceVO;
 
@@ -38,6 +39,13 @@ public interface IActivityPartake {
      * @return 发货单
      */
     List<InvoiceVO> scanInvoiceMqState(int dbCount);
+
+    /**
+     * 更新活动库存
+     *
+     * @param activityPartakeRecordVO   活动领取记录
+     */
+    void updateActivityStock(ActivityPartakeRecordVO activityPartakeRecordVO);
 
 
 }

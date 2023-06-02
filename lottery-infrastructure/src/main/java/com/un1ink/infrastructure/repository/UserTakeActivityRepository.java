@@ -2,14 +2,13 @@ package com.un1ink.infrastructure.repository;
 
 import com.alibaba.fastjson.JSON;
 import com.un1ink.common.constants.TakeState;
-import com.un1ink.domain.activity.model.vo.ActivityMQStateVO;
-import com.un1ink.domain.activity.model.vo.DrawOrderVO;
-import com.un1ink.domain.activity.model.vo.InvoiceVO;
-import com.un1ink.domain.activity.model.vo.UserTakeActivityVO;
+import com.un1ink.domain.activity.model.vo.*;
 import com.un1ink.domain.activity.repository.IUserTakeActivityRepository;
+import com.un1ink.infrastructure.dao.IActivityDao;
 import com.un1ink.infrastructure.dao.IUserStrategyExportDao;
 import com.un1ink.infrastructure.dao.IUserTakeActivityCountDao;
 import com.un1ink.infrastructure.dao.IUserTakeActivityDao;
+import com.un1ink.infrastructure.po.Activity;
 import com.un1ink.infrastructure.po.UserStrategyExport;
 import com.un1ink.infrastructure.po.UserTakeActivity;
 import com.un1ink.infrastructure.po.UserTakeActivityCount;
@@ -37,6 +36,9 @@ public class UserTakeActivityRepository implements IUserTakeActivityRepository {
 
     @Resource
     private IUserStrategyExportDao userStrategyExportDao;
+
+    @Resource
+    private IActivityDao activityDao;
 
     @Override
     public int subtractionLeftCount(Long activityId, String activityName, Integer takeCount, Integer userTakeLeftCount, String uId, Date partakeDate) {
@@ -141,6 +143,15 @@ public class UserTakeActivityRepository implements IUserTakeActivityRepository {
         invoiceVO.setAwardName(lossUserStrategyExport.getAwardName());
         invoiceVO.setAwardContent(lossUserStrategyExport.getAwardContent());
         return invoiceVO;
+    }
+
+    @Override
+    public void updateActivityStock(ActivityPartakeRecordVO activityPartakeRecordVO) {
+        Activity activity = new Activity();
+        activity.setActivityId(activityPartakeRecordVO.getActivityId());
+        activity.setStockSurplusCount(activityPartakeRecordVO.getStockSurplusCount());
+        activityDao.updateActivityStock(activity);
+
     }
 
 

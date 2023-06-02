@@ -30,7 +30,7 @@
 
     <select id="queryActivityById" parameterType="java.lang.Long" resultMap="activityMap">
         SELECT activityId, activityName, activityDesc, strategyId,beginDateTime, endDateTime,
-        stockCount,stockSurplusCount, takeCount, state, creator, createTime, updateTime
+        stockCount,stockSurplusCount,takeCount, state, creator, createTime, updateTime
         FROM activity
         WHERE activityId = #{activityId}
     </select>
@@ -62,5 +62,10 @@
         ORDER BY id ASC
         LIMIT 10
     </select>
+
+    <update id="updateActivityStock" parameterType="com.un1ink.infrastructure.po.Activity">
+        UPDATE activity SET stockSurplusCount = #{stockSurplusCount}
+        WHERE activityId = #{activityId} AND stockSurplusCount > #{stockSurplusCount}
+    </update>
 
 </mapper>

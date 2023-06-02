@@ -6,6 +6,7 @@ import com.un1ink.common.constants.ActivityState;
 import com.un1ink.common.constants.IdGeneratorMethod;
 import com.un1ink.common.constants.MQState;
 import com.un1ink.domain.activity.model.req.PartakeReq;
+import com.un1ink.domain.activity.model.res.StockRes;
 import com.un1ink.domain.activity.model.vo.*;
 import com.un1ink.domain.activity.repository.IActivityMQStateRepository;
 import com.un1ink.domain.activity.repository.IUserTakeActivityRepository;
@@ -100,6 +101,18 @@ public class ActivityPartakeImpl extends BaseActivityPartake {
     }
 
     @Override
+    protected StockRes subtractionActivityStockByRedis(String uId, Long activityId, Integer stockCount) {
+        return activityRepository.subtractionActivityStockByRedis(uId, activityId, stockCount);
+
+    }
+
+    @Override
+    protected void recoverActivityCacheStockByRedis(Long activityId, String tokenKey, String code) {
+        System.out.println("roll back and tokenKey:"+tokenKey);
+        activityRepository.recoverActivityCacheStockByRedis(activityId, tokenKey, code);
+    }
+
+    @Override
     protected Result grabActivity(PartakeReq req, ActivityBillVO bill, Long takeId) {
         try{
             dbRouter.doRouter(req.getUId());
@@ -185,6 +198,12 @@ public class ActivityPartakeImpl extends BaseActivityPartake {
         finally {
             dbRouter.clear();
         }
+    }
+
+    @Override
+    public void updateActivityStock(ActivityPartakeRecordVO activityPartakeRecordVO) {
+        userTakeActivityRepository.updateActivityStock(activityPartakeRecordVO);
+
     }
 
 

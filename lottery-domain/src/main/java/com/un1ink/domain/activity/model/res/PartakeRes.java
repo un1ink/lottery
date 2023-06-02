@@ -23,6 +23,10 @@ public class PartakeRes extends Result {
      * 策略id
      */
     private Long takeId;
+    /** 库存 */
+    private Integer stockCount;
+    /** activity 库存剩余 */
+    private Integer stockSurplusCount;
     public PartakeRes(String code, String info) {
         super(code, info);
     }
