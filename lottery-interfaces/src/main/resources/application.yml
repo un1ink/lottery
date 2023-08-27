@@ -49,7 +49,7 @@ spring:
 
 mini-db-router:
   jdbc:
-    # todo: 改为四库八表
+    # todo: 2库4表 可考虑改为 4库8表
     datasource:
       dbCount: 2
       tbCount: 4
