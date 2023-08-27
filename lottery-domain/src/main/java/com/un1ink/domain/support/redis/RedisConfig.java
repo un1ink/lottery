@@ -29,17 +29,13 @@ import redis.clients.jedis.Jedis;
 @EnableCaching
 public class RedisConfig extends CachingConfigurerSupport {
 
-    @Value("${redis.host}")
     private String redisHost;
 
-    @Value("${redis.port}")
     private int redisPort;
 
-    @Value("${redis.password}")
     private String redisPassword;
 
 
-    @Bean
     public Jedis jedis() {
         Jedis jedis = new Jedis(redisHost, redisPort);
         jedis.auth(redisPassword);

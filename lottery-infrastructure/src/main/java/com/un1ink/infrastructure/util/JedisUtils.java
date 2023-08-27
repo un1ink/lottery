@@ -10,10 +10,8 @@ import redis.clients.jedis.Jedis;
 public class JedisUtils {
     private static Jedis jedis;
 
-    @Value("${redis.host}")
     private String redisHost;
 
-    @Value("${redis.port}")
     private int redisPort;
 
     static {
