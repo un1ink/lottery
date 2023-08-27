@@ -26,16 +26,11 @@ public class RuleEngineHandle extends EngineBase {
 
         TreeRuleRich treeRuleRich = ruleRepository.queryTreeRuleRich(req.getTreeId());
 
-
-
         if (null == treeRuleRich) {
             throw new RuntimeException("Tree Rule is null!");
         }
 
         Map<Long, TreeNodeVO> map = treeRuleRich.getTreeNodeMap();
-
-
-
 
         // 决策节点
         TreeNodeVO treeNodeInfo = engineDecisionMaker(treeRuleRich, req);

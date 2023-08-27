@@ -17,12 +17,16 @@ import java.util.Date;
 public class ActivityBillVO {
     /** 用户Id */
     private String uId;
+
     /** 活动Id */
     private Long activityId;
+
     /** 活动名称 */
     private String activityName;
+
     /** 策略Id */
     private Long StrategyId;
+
     /** 库存剩余 */
     private Integer stockSurplusCount;
 
@@ -37,10 +41,13 @@ public class ActivityBillVO {
      * Constants.ActivityState
      */
     private Integer state;
+
     /** 用户可参与次数 */
     private Integer takeCount;
+
     /** 库存 */
     private Integer stockCount;
+
     /** 用户剩余参与次数 */
     private Integer userTakeLeftCount;
 

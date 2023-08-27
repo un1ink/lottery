@@ -24,5 +24,4 @@ public class DrawProcessRes extends Result {
         super(code, info);
     }
 
-
 }

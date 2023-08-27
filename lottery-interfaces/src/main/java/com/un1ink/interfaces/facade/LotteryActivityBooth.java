@@ -48,18 +48,14 @@ public class LotteryActivityBooth implements ILotteryActivityBooth {
                 logger.error("抽奖，失败(抽奖过程异常) uId：{} activityId：{}", drawReq.getUId(), drawReq.getActivityId());
                 return new DrawRes(drawProcessRes.getCode(), drawProcessRes.getInfo());
             }
-
-            // 2.数据转换
+            // 2.数据转换VO->DTO
             DrawAwardVO drawAwardVO = drawProcessRes.getDrawAwardVO();
             AwardDTO awardDTO  = awardMapping.sourceToTarget(drawAwardVO);
             awardDTO.setActivityId(drawReq.getActivityId());
-
             // 3.封装数据
             DrawRes drawRes = new DrawRes(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getInfo());
             drawRes.setAwardDTO(awardDTO);
-
             logger.info("抽奖，完成 uId：{} activityId：{} drawRes：{}", drawReq.getUId(), drawReq.getActivityId(), JSON.toJSONString(drawRes));
-
             return drawRes;
         } catch (Exception e) {
             logger.error("抽奖，失败 uId：{} activityId：{} reqJson：{}", drawReq.getUId(), drawReq.getActivityId(), JSON.toJSONString(drawReq), e);

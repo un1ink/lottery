@@ -70,17 +70,15 @@ public class ActivityProcessImpl implements IActivityProcess {
         Long strategyId = partakeRes.getStrategyId();
         Long takeId = partakeRes.getTakeId();
 
-        // 2. 首次成功领取活动，发送 MQ 消息
+        // 2. 参加活动，发送MQ记录活动参与消息
         if (ResponseCode.SUCCESS.getCode().equals(partakeRes.getCode())) {
             ActivityPartakeRecordVO activityPartakeRecord = new ActivityPartakeRecordVO();
             activityPartakeRecord.setUId(req.getUId());
             activityPartakeRecord.setActivityId(req.getActivityId());
             activityPartakeRecord.setStockCount(partakeRes.getStockCount());
             activityPartakeRecord.setStockSurplusCount(partakeRes.getStockSurplusCount());
-            // 发送 MQ 消息
             kafkaProducer.sendLotteryActivityPartakeRecord(activityPartakeRecord);
         }
-
 
         // 3. 进行抽奖
         DrawRes drawRes = drawExec.doDrawExec(new DrawReq(req.getUId(), strategyId, String.valueOf(takeId)));
@@ -91,14 +89,12 @@ public class ActivityProcessImpl implements IActivityProcess {
 
         // 4. 结果落库, 本地消息表添加记录
         DrawOrderVO drawOrderVO = buildDrawOrderVO(req, strategyId, takeId, drawAwardVO);
-
         Result recordResult = activityPartake.recordDrawOrder(drawOrderVO);
         if (!ResponseCode.SUCCESS.getCode().equals(recordResult.getCode())) {
             return new DrawProcessRes(recordResult.getCode(), recordResult.getInfo());
         }
 
         // 5. 发送MQ, 触发发奖流程,
-
         InvoiceVO invoiceVO = buildInvoiceVO(drawOrderVO);
         ListenableFuture<SendResult<String, Object>> future = kafkaProducer.sendLotteryInvoice(invoiceVO);
 
@@ -110,7 +106,6 @@ public class ActivityProcessImpl implements IActivityProcess {
     public RuleQuantificationCrowdResult doRuleQuantificationCrowd(DecisionMatterReq req) {
         // 1.量化决策
         EngineRes engineRes = engineFilter.process(req);
-
         if(!engineRes.isSuccess()) {
             return new RuleQuantificationCrowdResult(ResponseCode.RULE_ERR.getCode(), ResponseCode.RULE_ERR.getInfo());
         }

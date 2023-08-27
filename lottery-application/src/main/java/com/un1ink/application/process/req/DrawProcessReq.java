@@ -13,8 +13,10 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DrawProcessReq {
+
     /** 用户id */
     private String uId;
+
     /** 活动id */
     private Long activityId;
 }

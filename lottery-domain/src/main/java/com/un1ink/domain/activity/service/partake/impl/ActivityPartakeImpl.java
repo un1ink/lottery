@@ -152,7 +152,6 @@ public class ActivityPartakeImpl extends BaseActivityPartake {
                         logger.error("记录中奖单，个人参与活动抽奖已消耗完 activityId：{} uId：{}", drawOrder.getActivityId(), drawOrder.getUId());
                         return Result.buildResult(ResponseCode.INDEX_DUP);
                     }
-
                     // 保存抽奖信息
                     userTakeActivityRepository.saveUserStrategyExport(drawOrder);
                     // 本地消息表mq状态

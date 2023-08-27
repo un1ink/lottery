@@ -22,7 +22,7 @@ import javax.annotation.Resource;
 import java.util.Optional;
 
 /**
- * @description: 中奖发货单监听消息
+ * @description: 中奖发货单监听器
  * @author：un1ink
  * @date: 2023/4/2
  */
@@ -37,12 +37,9 @@ public class LotteryInvoiceListener {
     @KafkaListener(topics = KafkaProducer.TOPIC_INVOICE, groupId = "lottery")
     public void onMessage(ConsumerRecord<?, ?> record, Acknowledgment acknowledgment, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         Optional<?> message = Optional.ofNullable(record.value());
-        // 判断消息是否存在
         if (!message.isPresent()) {
             return;
         }
-
-        // 处理 MQ 消息
         try{
             // 1. 转化对象
             InvoiceVO invoiceVO = JSON.parseObject((String) message.get(), InvoiceVO.class);
@@ -58,12 +55,8 @@ public class LotteryInvoiceListener {
             goodsReq.setShippingAddress(invoiceVO.getShippingAddress());
             goodsReq.setExtInfo(invoiceVO.getExtInfo());
             DistributionRes distributionRes = distributionGoodsService.doDistribution(goodsReq);
-
-            Assert.isTrue(AwardState.SUCCESS.getCode().equals(distributionRes.getCode()), distributionRes.getInfo());
-
             // 3. 打印日志
             logger.info("消费MQ消息，完成 topic：{} bizId：{} 发奖结果：{}", topic, invoiceVO.getUId(), JSON.toJSONString(distributionRes));
-
             // 4. 消息消费完成
             acknowledgment.acknowledge();
         } catch (Exception e) {

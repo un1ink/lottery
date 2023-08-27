@@ -3,7 +3,7 @@ package com.un1ink.common.constants;
 import lombok.*;
 
 /**
- * @description:
+ * @description: 活动状态枚举类
  * @author：un1ink
  * @date: 2023/3/26
  */

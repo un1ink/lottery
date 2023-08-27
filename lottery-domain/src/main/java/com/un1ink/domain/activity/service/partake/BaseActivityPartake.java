@@ -12,7 +12,6 @@ import com.un1ink.domain.activity.model.vo.UserTakeActivityVO;
 import com.un1ink.domain.support.ids.IIdGenerator;
 
 import javax.annotation.Resource;
-import java.text.AttributedCharacterIterator;
 import java.util.Map;
 
 /**
@@ -26,15 +25,14 @@ public abstract class BaseActivityPartake extends ActivityPartakeSupport impleme
 
     @Override
     public PartakeRes doPartake(PartakeReq req) {
-        // 1. 查询是否存在未执行抽奖领取活动单【user_take_activity 存在 state = 0，领取了但抽奖过程失败的，可以直接返回领取结果继续抽奖】
+        // 1. 查询是否存在未执行抽奖领取活动单(扣除参加参加次数，但未进行抽奖)
         UserTakeActivityVO userTakeActivityVO = this.queryNoConsumedTakeActivityOrder(req.getActivityId(), req.getUId());
         if (null != userTakeActivityVO) {
             return buildPartakeResult(userTakeActivityVO.getStrategyId(), userTakeActivityVO.getTakeId());
         }
 
-        // 2. 查询活动账单
+        // 2. 查询活动信息单
         ActivityBillVO activityBillVO = super.queryActivityBill(req);
-
 
         // 3. 活动信息校验处理【活动库存、状态、日期、个人参与次数】
         Result checkResult = this.checkActivity(req, activityBillVO);

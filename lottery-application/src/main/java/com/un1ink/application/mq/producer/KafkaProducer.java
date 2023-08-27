@@ -31,9 +31,12 @@ public class KafkaProducer {
     @Resource
     IActivityMQStateRepository activityMQStateRepository;
 
-    public static final String TOPIC_INVOICE= "lotteryInvoice";
-    public static final String TOPIC_ACTIVITY_PARTAKE= "lotteryPartakeActivity";
+    public static final String TOPIC_INVOICE= "lottery_invoice";
+    public static final String TOPIC_ACTIVITY_PARTAKE= "lottery_activity_partake";
 
+    /**
+     * mq更新发货信息，采用本地消息表保证可靠性
+     * */
     public ListenableFuture<SendResult<String, Object>> sendLotteryInvoice(InvoiceVO invoiceVO) {
         String objJson = JSON.toJSONString(invoiceVO);
         logger.info("发送MQ消息 topic：{} bizId：{} message：{}", TOPIC_INVOICE, invoiceVO.getUId(), objJson);
@@ -41,14 +44,17 @@ public class KafkaProducer {
         future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
             @Override
             public void onFailure(Throwable ex) {
-                // 1. MQ 消息发送失败，更新数据库表 user_strategy_export_mq.mqState = 2 【等待定时任务扫码补偿MQ消息】
+                // 1. MQ 消息发送失败，更新数据库表 user_strategy_export_mq.mqState = 2
                 activityMQStateRepository.updateInvoiceMqState(invoiceVO.getUId(), invoiceVO.getOrderId(), MQState.FAIL.getCode());
+                logger.info("异步更新数据库发货消息发送失败");
             }
 
             @Override
             public void  onSuccess(SendResult<String, Object> result) {
-                // 2. MQ 消息发送完成，更新数据库表 user_strategy_export_mq.mqState = 1，删除本地消息表记录
+                // 2. MQ 消息发送完成，删除本地消息表记录
                 activityMQStateRepository.deleteInvoiceMqState(invoiceVO.getUId(), invoiceVO.getOrderId(), MQState.COMPLETE.getCode());
+                logger.info("异步更新数据库发货消息发送成功");
+
             }
         });
         return future;
@@ -62,14 +68,14 @@ public class KafkaProducer {
         future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
             @Override
             public void onFailure(Throwable ex) {
-                // TODO MQ 消息发送失败
+                // TODO 更新本地消息表
                 logger.info("异步更新数据库库存消息发送失败");
             }
 
             @Override
             public void  onSuccess(SendResult<String, Object> result) {
                 // TODO MQ 消息发送完成
-                logger.info("异步更新数据库库存消息发送失败");
+                logger.info("异步更新数据库库存消息发送成功");
             }
         });
         return future;

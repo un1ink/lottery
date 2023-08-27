@@ -157,8 +157,6 @@ public class RedisUtils {
         if (delta < 0) {
             throw new RuntimeException("递增因子必须大于0");
         }
-        System.out.println("redis_key:" + key+", delta:" + delta);
-        System.out.println("redis_key_value:"+get(key));
         return redisTemplate.opsForValue().increment(key, delta);
     }
 

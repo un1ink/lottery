@@ -56,6 +56,7 @@ public class LotteryXxlJob {
     @Resource
     private IActivityMQStateRepository activityMQStateRepository;
 
+    /** 将活动从已通过状态，转为运行状态 */
     @XxlJob("lotteryActivityStatePass2DoingJob")
     public void lotteryActivityStatePass2DoingJob() throws Exception {
         logger.info("扫描活动状态(pass -> doing) Begin");
@@ -82,6 +83,8 @@ public class LotteryXxlJob {
 
     }
 
+
+    /** 将活动从运行状态，转为关闭状态 */
     @XxlJob("lotteryActivityStateDoing2CloseJob")
     public void lotteryActivityStateDoing2CloseJob() throws Exception {
         logger.info("扫描活动状态(doing -> close) Begin ");
@@ -107,6 +110,7 @@ public class LotteryXxlJob {
         logger.info("扫描活动状态(doing -> close) End");
     }
 
+    /** 逐表扫描本地消息表，补偿mq失败消息 */
     @XxlJob("lotteryOrderMQStateJob")
     public void lotteryOrderMQStateJob() throws Exception {
         String jobParam = XxlJobHelper.getJobParam();
@@ -114,7 +118,6 @@ public class LotteryXxlJob {
             logger.info("扫描用户抽奖奖品发放MQ状态错误 params is null");
             return;
         }
-
         String[] params = jobParam.split(",");
         logger.info("扫描用户抽奖奖品发放MQ状态开始 params：{}", JSON.toJSONString(params));
         if(params.length == 0){
@@ -125,7 +128,7 @@ public class LotteryXxlJob {
         for (String param : params) {
             int dbCount = Integer.parseInt(param);
             if (dbCount > dbRouter.dbCount()) {
-                logger.info("扫描用户抽奖奖品发放MQ状态[Table = 2*4] 结束 dbCount not exist");
+                logger.info("扫描用户抽奖奖品发放MQ状态[Table = 2* 4 ] 结束 dbCount not exist");
                 continue;
             }
 

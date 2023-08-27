@@ -41,7 +41,7 @@ public class ActivityDeployImpl implements IActivityDeploy {
             ActivityVO activityVO = activityConfigRich.getActivity();
             activityRepository.addActivity(activityVO);
 
-            //添加奖品配置信息
+            // 添加奖品配置信息
             List<AwardVO> awardVOList = activityConfigRich.getAwardList();
             activityRepository.addAward(awardVOList);
 
