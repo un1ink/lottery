@@ -102,13 +102,14 @@ public class ActivityPartakeImpl extends BaseActivityPartake {
 
     @Override
     protected StockRes subtractionActivityStockByRedis(String uId, Long activityId, Integer stockCount) {
+        logger.info("扣减活动库存，通过Redis activityId：{} uId：{} stockCount：{}", activityId, uId, stockCount);
         return activityRepository.subtractionActivityStockByRedis(uId, activityId, stockCount);
 
     }
 
     @Override
     protected void recoverActivityCacheStockByRedis(Long activityId, String tokenKey, String code) {
-        System.out.println("roll back and tokenKey:"+tokenKey);
+        logger.info("恢复活动库存，通过Redis activityId：{} tokenKey：{} code：{}", activityId, tokenKey, code);
         activityRepository.recoverActivityCacheStockByRedis(activityId, tokenKey, code);
     }
 

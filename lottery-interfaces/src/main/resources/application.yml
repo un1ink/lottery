@@ -45,11 +45,16 @@ spring:
     host: 10.12.182.173     # Redis服务器地址，修改为你的地址
     port: 6379              # Redis服务器连接端口
     password: redis          # Redis服务器连接密码（默认为空）
-    timeout: 10000           # Redis服务器链接超时配置
+    timeout: 2000           # Redis服务器链接超时配置
+    jedis:
+      pool:
+        min-idle: 0
+        max-active: 8
+        max-idle: 8
 
 mini-db-router:
   jdbc:
-    # todo: 2库4表 可考虑改为 4库8表
+    # todo: 2库4表可进一步扩展
     datasource:
       dbCount: 2
       tbCount: 4
@@ -58,19 +63,19 @@ mini-db-router:
       list: db01,db02
       db00:
         driver-class-name: com.mysql.jdbc.Driver
-        url: jdbc:mysql://8.130.112.217:3306/lottery?useUnicode=true
+        url: jdbc:mysql://127.0.0.1:3307/lottery?useUnicode=true
         username: root
-        password: Ali@0405
+        password: root
       db01:
         driver-class-name: com.mysql.jdbc.Driver
-        url: jdbc:mysql://8.130.112.217:3306/lottery_01?useUnicode=true
+        url: jdbc:mysql://127.0.0.1:3307/lottery_01?useUnicode=true
         username: root
-        password: Ali@0405
+        password: root
       db02:
         driver-class-name: com.mysql.jdbc.Driver
-        url: jdbc:mysql://8.130.112.217:3306/lottery_02?useUnicode=true
+        url: jdbc:mysql://127.0.0.1:3307/lottery_02?useUnicode=true
         username: root
-        password: Ali@0405
+        password: root
 
 mybatis:
   mapper-locations: classpath:/mybatis/mapper/*.xml

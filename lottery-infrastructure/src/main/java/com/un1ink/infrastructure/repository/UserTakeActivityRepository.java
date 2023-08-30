@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @description:
+ * @description: 用户抽奖状态信息仓储服务
  * @author：un1ink
  * @date: 2023/3/29
  */

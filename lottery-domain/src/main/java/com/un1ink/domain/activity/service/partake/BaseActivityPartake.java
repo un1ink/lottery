@@ -10,6 +10,8 @@ import com.un1ink.domain.activity.model.vo.ActivityBillVO;
 import com.un1ink.common.constants.ResponseCode;
 import com.un1ink.domain.activity.model.vo.UserTakeActivityVO;
 import com.un1ink.domain.support.ids.IIdGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Resource;
 import java.util.Map;
@@ -20,6 +22,9 @@ import java.util.Map;
  * @date: 2023/3/29
  */
 public abstract class BaseActivityPartake extends ActivityPartakeSupport implements IActivityPartake{
+
+    Logger logger = LoggerFactory.getLogger(BaseActivityPartake.class);
+
     @Resource
     private Map<IdGeneratorMethod, IIdGenerator> idGeneratorMap;
 
@@ -40,10 +45,11 @@ public abstract class BaseActivityPartake extends ActivityPartakeSupport impleme
             return new PartakeRes(checkResult.getCode(), checkResult.getInfo());
         }
 
-        // 4. 扣减活动库存，通过Redis【活动库存扣减编号，作为锁的Key，缩小颗粒度】 Begin
+        // 4. 扣减活动库存，通过Redis
         StockRes subtractionActivityResult = this.subtractionActivityStockByRedis(req.getUId(), req.getActivityId(), activityBillVO.getStockCount());
 
         if (!ResponseCode.SUCCESS.getCode().equals(subtractionActivityResult.getCode())) {
+            logger.info("活动库存超卖，回滚扣减操作，活动ID：{}，用户ID：{}，扣减结果：{}", req.getActivityId(), req.getUId(), JSON.toJSONString(subtractionActivityResult));
             this.recoverActivityCacheStockByRedis(req.getActivityId(), subtractionActivityResult.getStockKey(), subtractionActivityResult.getCode());
             return new PartakeRes(subtractionActivityResult.getCode(), subtractionActivityResult.getInfo());
         }
@@ -52,6 +58,7 @@ public abstract class BaseActivityPartake extends ActivityPartakeSupport impleme
         Long takeId = idGeneratorMap.get(IdGeneratorMethod.SnowFlake).nextId();
         Result grabResult = this.grabActivity(req, activityBillVO, takeId);
         if(!ResponseCode.SUCCESS.getCode().equals(grabResult.getCode())) {
+            logger.info("参加活动失败，回滚扣减操作，活动ID：{}，用户ID：{}，扣减结果：{}", req.getActivityId(), req.getUId(), JSON.toJSONString(subtractionActivityResult));
             this.recoverActivityCacheStockByRedis(req.getActivityId(), subtractionActivityResult.getStockKey(), subtractionActivityResult.getCode());
             return new PartakeRes(grabResult.getCode(), grabResult.getInfo());
         }
@@ -109,7 +116,7 @@ public abstract class BaseActivityPartake extends ActivityPartakeSupport impleme
 
 
     /**
-     * 领取活动
+     * 扣减用户参加活动次数
      *
      * @param req 参与活动请求
      * @param bill    活动账单

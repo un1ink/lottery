@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import javax.annotation.Resource;
 
 /**
- * @description:
+ * @description: 订单仓储(用户抽奖信息)
  * @author：un1ink
  * @date: 2023/4/1
  */

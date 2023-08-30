@@ -24,4 +24,6 @@ public interface ILotteryActivityBooth {
      */
     DrawRes doQuantificationDraw(QuantificationDrawReq quantificationDrawReq);
 
+    int testRpc(String message);
+
 }

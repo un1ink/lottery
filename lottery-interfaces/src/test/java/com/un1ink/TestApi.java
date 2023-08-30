@@ -1,13 +1,10 @@
 package com.un1ink;
 
-import com.un1ink.infrastructure.dao.IActivityDao;
-import com.un1ink.infrastructure.po.Activity;
 import org.junit.Test;
-import org.junit.platform.commons.logging.Logger;
-import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import redis.clients.jedis.JedisPool;
 
 import javax.annotation.Resource;
 import java.security.SecureRandom;
@@ -17,16 +14,9 @@ import java.util.*;
 @SpringBootTest
 public class TestApi {
 
-    /**
-     * 抽奖策略测试
-     * <p>
-     * https://www.jugong.wang/random-portal/my/qa
-     * https://csrc.nist.gov/Projects/Random-Bit-Generation/Documentation-and-Software
-     * Java 随机数生成器 Random & SecureRandom 原理分析 https://blog.csdn.net/hustspy1990/article/details/93364805
-     * 使用 SecureRandom 产生随机数采坑记录 https://blog.csdn.net/weixin_41385912/article/details/103267277
-     */
 
-
+    @Resource
+    public JedisPool jedisPool;
 
     @Test
     public void test_idx() {
@@ -91,6 +81,11 @@ public class TestApi {
         }
 
 
+    }
+
+    @Test
+    public void contextLoads() {
+        System.out.println(jedisPool);
     }
 
 

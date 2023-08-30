@@ -9,18 +9,19 @@ import com.un1ink.domain.activity.model.vo.*;
 import com.un1ink.common.constants.ResponseCode;
 import com.un1ink.infrastructure.dao.*;
 import com.un1ink.infrastructure.po.*;
-import com.un1ink.infrastructure.util.RedisUtils;
+import com.un1ink.infrastructure.util.JedisUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Repository;
+import redis.clients.jedis.Jedis;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @description:
+ * @description: 活动仓储服务
  * @author：un1ink
  * @date: 2023/3/26
  */
@@ -39,7 +40,7 @@ public class ActivityRepository implements IActivityRepository {
     private IUserTakeActivityCountDao userTakeActivityCountDao;
 
     @Resource
-    private RedisUtils redisUtils;
+    private JedisUtils jedisUtils;
 
     private final Logger logger = LoggerFactory.getLogger(ActivityRepository.class);
 
@@ -141,10 +142,8 @@ public class ActivityRepository implements IActivityRepository {
         List<Activity> activityList;
 
         if (ActivityState.DOING.getCode().equals(activityState)) {
-            // scan doing
             activityList = activityDao.scanDoingActivityList(id);
         } else {
-            // scan pass
             activityList = activityDao.scanPassActivityList(id);
         }
         List<ActivityVO> activityVOList = new ArrayList<>(activityList.size());
@@ -165,35 +164,26 @@ public class ActivityRepository implements IActivityRepository {
     public StockRes subtractionActivityStockByRedis(String uId, Long activityId, Integer stockCount) {
         //  1. 获取抽奖活动库存 Key
         String stockKey = RedisKey.KEY_LOTTERY_ACTIVITY_STOCK_COUNT(activityId);
-        System.out.println("subtractionActivityStockByRedis-stockKey:" + stockKey);
-
+        logger.info("subtractionActivityStockByRedis-stockKey : {}", stockKey);
+        Jedis jedis = jedisUtils.getJedis();
 
         // 2. 扣减库存，目前占用库存数
-        Integer stockUsedCount = (int) redisUtils.incr(stockKey, 1);
-
+        long stockSpareCount = jedis.decr(stockKey);
+        jedis.close();
         // 3. 超出库存判断，进行恢复原始库存
-        if (stockUsedCount > stockCount) {
-            redisUtils.decr(stockKey, 1);
-            logger.info("超出库存判断，进行恢复原始库存。stockUsedCount:{}，stockCount:{}", stockUsedCount, stockCount);
+        if (stockSpareCount < 0) {
+            logger.info("超出库存判断，进行恢复原始库存。stockSpareCount:{}，stockCount:{}", stockSpareCount, stockCount);
             return new StockRes(ResponseCode.OUT_OF_STOCK.getCode(), ResponseCode.OUT_OF_STOCK.getInfo());
         }
 
-        // 4. 以活动库存占用编号，生成对应加锁Key，细化锁的颗粒度
-        String stockTokenKey = RedisKey.KEY_LOTTERY_ACTIVITY_STOCK_COUNT_TOKEN(activityId, stockUsedCount);
-
-        // 5. 使用 Redis.setNx 加一个分布式锁
-        boolean lockToken = redisUtils.setNx(stockTokenKey, 350L);
-        if (!lockToken) {
-            logger.info("抽奖活动{}用户秒杀{}扣减库存，分布式锁失败：{}", activityId, uId, stockTokenKey);
-            return new StockRes(ResponseCode.ERR_TOKEN.getCode(), ResponseCode.ERR_TOKEN.getInfo());
-        }
-
-        return new StockRes(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getInfo(), stockTokenKey, stockCount - stockUsedCount);
+        return new StockRes(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getInfo(), stockKey, (int)stockSpareCount);
     }
 
     @Override
     public void recoverActivityCacheStockByRedis(Long activityId, String tokenKey, String code) {
-        // 删除分布式锁 Key
-        redisUtils.del(tokenKey);
+        Jedis jedis =  jedisUtils.getJedis();
+        jedis.incr(tokenKey);
+        jedis.close();
     }
+
 }

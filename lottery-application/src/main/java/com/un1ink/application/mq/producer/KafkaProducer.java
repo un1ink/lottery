@@ -62,7 +62,7 @@ public class KafkaProducer {
 
     public ListenableFuture<SendResult<String, Object>> sendLotteryActivityPartakeRecord(ActivityPartakeRecordVO activityPartakeRecordVO) {
         String objJson = JSON.toJSONString(activityPartakeRecordVO);
-        logger.info("发送MQ消息(领取活动记录) topic：{} bizId：{} message：{}", TOPIC_ACTIVITY_PARTAKE, activityPartakeRecordVO.getUId(), objJson);
+        logger.info("发送MQ消息(参加活动记录) topic：{} bizId：{} message：{}", TOPIC_ACTIVITY_PARTAKE, activityPartakeRecordVO.getUId(), objJson);
         ListenableFuture<SendResult<String, Object>> future =  kafkaTemplate.send(TOPIC_ACTIVITY_PARTAKE, objJson);
 
         future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {

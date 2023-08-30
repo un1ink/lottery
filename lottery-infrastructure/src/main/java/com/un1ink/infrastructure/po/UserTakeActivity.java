@@ -5,7 +5,7 @@ import lombok.*;
 import java.util.Date;
 
 /**
- * @description: 用户领取活动表
+ * @description: 用户参加活动记录表-分库
  * @author：un1ink
  * @date: 2023/3/28
  */
@@ -17,48 +17,36 @@ import java.util.Date;
 @Builder
 @ToString
 public class UserTakeActivity {
-    /**
-     * 自增ID
-     */
+    /** 自增ID */
     private Long id;
-    /**
-     * 用户ID
-     */
+
+    /** 用户ID */
     private String uId;
-    /**
-     * 活动领取ID
-     */
+
+    /** 活动参加ID */
     private Long takeId;
-    /**
-     * 活动ID
-     */
+
+    /** 活动ID */
     private Long activityId;
-    /**
-     * 活动名称
-     */
+
+    /** 活动名称 */
     private String activityName;
-    /**
-     * 活动参与时间
-     */
+
+    /** 活动参与时间 */
     private Date takeDate;
-    /**
-     * 参与次数
-     */
+
+    /** 活动参与次数 */
     private Integer takeCount;
-    /**
-     * 活动单使用 0未使用 1已使用
-     */
+
+    /** 抽奖状态 0参加但未执行抽奖 1已抽奖 */
     private Integer state;
-    /**
-     * 防重ID
-     */
+
+    /** 防重ID 保证幂等 */
     private String uuid;
-    /**
-     * 创建时间
-     */
+
+    /** 创建时间 */
     private Date createTime;
-    /**
-     * 更新时间
-     */
+
+    /** 更新时间 */
     private Date updateTime;
 }

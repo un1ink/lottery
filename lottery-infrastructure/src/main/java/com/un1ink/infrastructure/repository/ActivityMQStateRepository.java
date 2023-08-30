@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @description:
+ * @description: 活动状态本地消息表仓储服务
  * @author：un1ink
  * @date: 2023/4/3
  */

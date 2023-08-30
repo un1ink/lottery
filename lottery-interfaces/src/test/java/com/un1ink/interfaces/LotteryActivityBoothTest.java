@@ -34,7 +34,7 @@ public class LotteryActivityBoothTest {
     public void test(){
         int epoch = 1;
         for(int i = 0; i < epoch; i++){
-            String uId = "un1ink_hast_"+i;
+            String uId = "un1ink_"+i;
             test_doDraw(uId);
             test_doQuantificationDraw(uId);
         }

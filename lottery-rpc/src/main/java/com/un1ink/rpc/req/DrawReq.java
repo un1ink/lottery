@@ -8,7 +8,7 @@ import lombok.Setter;
 import java.io.Serializable;
 
 /**
- * @description:
+ * @description: 抽奖请求
  * @author：un1ink
  * @date: 2023/4/2
  */

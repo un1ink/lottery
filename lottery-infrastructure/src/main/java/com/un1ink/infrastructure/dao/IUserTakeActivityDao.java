@@ -13,7 +13,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface IUserTakeActivityDao {
     /**
-     * 添加用户领取信息
+     * 添加用户参加活动信息
      * @param userTakeActivity 用户参加活动信息
      */
     void insert(UserTakeActivity userTakeActivity);

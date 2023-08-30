@@ -3,7 +3,7 @@ package com.un1ink.infrastructure.po;
 import lombok.*;
 
 /**
- * @description:
+ * @description: 本地消息表订单实体类-分库
  * @author：un1ink
  * @date: 2023/4/3
  */
@@ -13,11 +13,13 @@ import lombok.*;
 @Setter
 @Builder
 public class ActivityMQState {
+
     /** 用户ID */
     private String uId;
-    /** 订单ID */
 
+    /** 订单ID */
     private Long orderId;
+
     /** 消息队列状态*/
     private Integer mqState;
 }

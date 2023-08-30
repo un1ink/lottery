@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * @description: 策略仓储服务
  * @author un1ink
  */
 @Repository
@@ -53,8 +54,6 @@ public class StrategyRepository implements IStrategyRepository {
     @Override
     public AwardBriefVO queryAwardInfo(String awardId) {
         Award award = awardDao.queryAwardInfo(awardId);
-
-        // 可以使用 BeanUtils.copyProperties(award, awardBriefVO)、或者基于ASM实现的Bean-Mapping，但在效率上最好的依旧是硬编码
         AwardBriefVO awardBriefVO = new AwardBriefVO();
         BeanUtils.copyProperties(award, awardBriefVO);
 

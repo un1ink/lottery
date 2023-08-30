@@ -20,7 +20,14 @@ public interface IActivityRepository {
      */
     void addActivity(ActivityVO activity);
 
+    /**
+     * 查询活动配置
+     * @param activityId 活动ID
+     * @return 活动配置
+     */
     ActivityVO queryActivityById(Long activityId);
+
+
     /**
      * 添加奖品配置集合
      *
@@ -51,6 +58,7 @@ public interface IActivityRepository {
      * @return              更新结果
      */
     boolean alterStatus(Long activityId, Enum<ActivityState> beforeState, Enum<ActivityState> afterState);
+
     /**
      * 查询活动详单
      *

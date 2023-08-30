@@ -12,13 +12,9 @@ import lombok.Setter;
 @Setter
 @Getter
 public class StockRes extends Result {
-    /**
-     * 库存 Key
-     */
+    /** 库存 Key */
     private String stockKey;
-    /**
-     * activity 库存剩余
-     */
+    /** activity 库存剩余 */
     private Integer stockSurplusCount;
 
     public StockRes(String code, String info) {

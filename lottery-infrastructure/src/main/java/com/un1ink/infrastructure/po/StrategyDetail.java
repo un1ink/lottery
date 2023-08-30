@@ -5,6 +5,7 @@ import lombok.*;
 import java.math.BigDecimal;
 
 /**
+ * @description: 抽奖策略明细表实体类-主库
  * @author un1ink
  */
 @NoArgsConstructor

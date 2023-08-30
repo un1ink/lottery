@@ -64,9 +64,8 @@ public class ActivityDeployImpl implements IActivityDeploy {
 
     @Override
     public void updateActivity(ActivityConfigReq req) {
-        /**
-         * TODO: 更新活动，后续补充
-         */
+        // TODO: 更新活动，后续补充
+
     }
 
     @Override

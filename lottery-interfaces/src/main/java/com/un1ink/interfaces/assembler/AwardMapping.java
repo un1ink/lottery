@@ -7,7 +7,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
 /**
- * @description:
+ * @description: 对象转化接口
  * @author：un1ink
  * @date: 2023/4/2
  */

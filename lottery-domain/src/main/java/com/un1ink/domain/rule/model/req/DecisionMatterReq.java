@@ -21,7 +21,7 @@ public class DecisionMatterReq {
     private Long treeId;
     /** 用户ID */
     private String userId;
-    /** 决策值 */
+    /** 决策值() */
     private Map<String, Object> valMap;
 
 }

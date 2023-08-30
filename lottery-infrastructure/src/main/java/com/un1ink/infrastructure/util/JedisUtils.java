@@ -1,36 +1,35 @@
 package com.un1ink.infrastructure.util;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
-@Configuration
+/**
+ * @description:
+ * @author：un1ink
+ * @date: 2023/8/30
+ */
 @Component
 public class JedisUtils {
-    private static Jedis jedis;
+    @Autowired
+    private JedisPool jedisPool;
 
-    @Value("${redis.host}")
-    private String redisHost;
+    /**
+     * 获取Jedis
+     */
+    public Jedis getJedis() {
 
-    @Value("${redis.port}")
-    private int redisPort;
-
-    static {
-        // todo 从配置文件中读取
-        jedis = new Jedis("localhost", 6379);
+        return jedisPool.getResource();
     }
 
-    public static Jedis getJedis() {
-        return jedis;
+    /**
+     * 关闭Jedis连接
+     */
+    public void close(Jedis jedis) {
+        if(jedis != null) {
+            jedis.close();
+        }
     }
-
-    public long getAndIncr(String key, long delta) {
-        long currentValue = jedis.incrBy(key, delta);
-        return currentValue;
-    }
-
-
-
 
 }

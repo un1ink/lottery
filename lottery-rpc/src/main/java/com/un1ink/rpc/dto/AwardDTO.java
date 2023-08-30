@@ -8,7 +8,7 @@ import lombok.Setter;
 import java.io.Serializable;
 
 /**
- * @description: 奖品信息
+ * @description: 奖品信息，DTO对象，用于RPC层传输数据。
  * @author：un1ink
  * @date: 2023/4/2
  */

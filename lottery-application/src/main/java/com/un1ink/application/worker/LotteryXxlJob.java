@@ -57,6 +57,7 @@ public class LotteryXxlJob {
     private IActivityMQStateRepository activityMQStateRepository;
 
     /** 将活动从已通过状态，转为运行状态 */
+    // TODO 转为运行状态时，将库存加入到redis，数据预热
     @XxlJob("lotteryActivityStatePass2DoingJob")
     public void lotteryActivityStatePass2DoingJob() throws Exception {
         logger.info("扫描活动状态(pass -> doing) Begin");
@@ -85,6 +86,7 @@ public class LotteryXxlJob {
 
 
     /** 将活动从运行状态，转为关闭状态 */
+    // TODO 转为关闭状态时，移除redis中的库存信息，避免内存占有
     @XxlJob("lotteryActivityStateDoing2CloseJob")
     public void lotteryActivityStateDoing2CloseJob() throws Exception {
         logger.info("扫描活动状态(doing -> close) Begin ");

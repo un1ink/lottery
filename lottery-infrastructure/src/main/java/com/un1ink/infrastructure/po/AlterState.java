@@ -3,7 +3,7 @@ package com.un1ink.infrastructure.po;
 import lombok.*;
 
 /**
- * @description:
+ * @description: 活动变更状态类-主库
  * @author：un1ink
  * @date: 2023/3/26
  */
@@ -14,6 +14,7 @@ import lombok.*;
 @Builder
 @ToString
 public class AlterState {
+
     /** 活动ID */
     private Long activityId;
 

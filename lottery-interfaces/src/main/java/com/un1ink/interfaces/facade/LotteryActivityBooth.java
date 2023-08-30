@@ -14,6 +14,7 @@ import com.un1ink.rpc.dto.AwardDTO;
 import com.un1ink.rpc.req.DrawReq;
 import com.un1ink.rpc.req.QuantificationDrawReq;
 import com.un1ink.rpc.res.DrawRes;
+import org.apache.dubbo.config.annotation.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,7 @@ import javax.annotation.Resource;
  * @date: 2023/4/2
  */
 
+@Service
 @Component
 public class LotteryActivityBooth implements ILotteryActivityBooth {
     private Logger logger = LoggerFactory.getLogger(LotteryActivityBooth.class);
@@ -48,11 +50,11 @@ public class LotteryActivityBooth implements ILotteryActivityBooth {
                 logger.error("抽奖，失败(抽奖过程异常) uId：{} activityId：{}", drawReq.getUId(), drawReq.getActivityId());
                 return new DrawRes(drawProcessRes.getCode(), drawProcessRes.getInfo());
             }
-            // 2.数据转换VO->DTO
+            // 2. 数据转换->DTO
             DrawAwardVO drawAwardVO = drawProcessRes.getDrawAwardVO();
             AwardDTO awardDTO  = awardMapping.sourceToTarget(drawAwardVO);
             awardDTO.setActivityId(drawReq.getActivityId());
-            // 3.封装数据
+            // 3. 封装抽奖结果
             DrawRes drawRes = new DrawRes(ResponseCode.SUCCESS.getCode(), ResponseCode.SUCCESS.getInfo());
             drawRes.setAwardDTO(awardDTO);
             logger.info("抽奖，完成 uId：{} activityId：{} drawRes：{}", drawReq.getUId(), drawReq.getActivityId(), JSON.toJSONString(drawRes));
@@ -87,7 +89,7 @@ public class LotteryActivityBooth implements ILotteryActivityBooth {
                 return new DrawRes(drawProcessRes.getCode(), drawProcessRes.getInfo());
             }
 
-            // 3. 数据转换
+            // 3. 数据转换->DTO
             DrawAwardVO drawAwardVO = drawProcessRes.getDrawAwardVO();
             AwardDTO awardDTO = awardMapping.sourceToTarget(drawAwardVO);
             awardDTO.setActivityId(activityId);
@@ -103,5 +105,12 @@ public class LotteryActivityBooth implements ILotteryActivityBooth {
             logger.error("量化人群抽奖，失败 uId：{} treeId：{} reqJson：{}", quantificationDrawReq.getUId(), quantificationDrawReq.getTreeId(), JSON.toJSONString(quantificationDrawReq), e);
             return new DrawRes(ResponseCode.UN_ERROR.getCode(), ResponseCode.UN_ERROR.getInfo());
         }
+    }
+
+    // Todo 预留http接口
+
+    @Override
+    public int testRpc(String message) {
+        return message.hashCode();
     }
 }

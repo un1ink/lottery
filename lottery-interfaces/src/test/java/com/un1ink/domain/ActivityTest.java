@@ -179,7 +179,7 @@ public class ActivityTest {
 
     @Test
     public void test_activityPartake() {
-        PartakeReq req = new PartakeReq("Uhdgkw766120d", 100001L, new Date());
+        PartakeReq req = new PartakeReq("un1ink_0829", 100001L, new Date());
         PartakeRes res = activityPartake.doPartake(req);
         logger.info("请求参数：{}", JSON.toJSONString(req));
         logger.info("测试结果：{}", JSON.toJSONString(res));

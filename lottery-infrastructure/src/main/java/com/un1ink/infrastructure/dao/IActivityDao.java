@@ -1,7 +1,6 @@
 package com.un1ink.infrastructure.dao;
 
-import com.un1ink.domain.activity.model.req.PartakeReq;
-import com.un1ink.domain.activity.model.vo.ActivityBillVO;
+
 import com.un1ink.infrastructure.po.Activity;
 import com.un1ink.infrastructure.po.AlterState;
 import org.apache.ibatis.annotations.Mapper;
@@ -17,7 +16,7 @@ public interface IActivityDao {
     /**
      * 插入活动
      *
-     * @param req 活动请求
+     * @param req 待插入活动对象
      */
     void insert(Activity req);
 
@@ -32,7 +31,7 @@ public interface IActivityDao {
     /**
      * 变更活动状态
      *
-     * @param alterState  [activityId、beforeState、afterState]
+     * @param alterState  [活动id、变更前状态、变更后状态]
      * @return 更新数量
      */
     int alterState(AlterState alterState);
@@ -59,7 +58,7 @@ public interface IActivityDao {
 
 
     /**
-     * 更新用户领取活动后，活动库存
+     * 更新用户参加活动后，活动库存
      *
      * @param activity  入参
      */
