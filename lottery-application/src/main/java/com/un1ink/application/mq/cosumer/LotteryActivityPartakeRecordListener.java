@@ -1,5 +1,6 @@
 package com.un1ink.application.mq.cosumer;
 
+import com.un1ink.application.mq.producer.KafkaProducer;
 import com.un1ink.domain.activity.model.vo.ActivityPartakeRecordVO;
 import com.un1ink.domain.activity.service.partake.IActivityPartake;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -29,7 +30,7 @@ public class LotteryActivityPartakeRecordListener {
     @Resource
     private IActivityPartake activityPartake;
 
-    @KafkaListener(topics = "lottery_activity_partake", groupId = "lottery")
+    @KafkaListener(topics = KafkaProducer.TOPIC_ACTIVITY_PARTAKE, groupId = "lottery")
     public void onMessage (ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         Optional<?> message = Optional.ofNullable(record.value());
         if (!message.isPresent()) {

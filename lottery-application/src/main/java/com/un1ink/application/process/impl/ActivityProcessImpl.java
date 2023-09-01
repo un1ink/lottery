@@ -1,5 +1,6 @@
 package com.un1ink.application.process.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.un1ink.application.mq.producer.KafkaProducer;
 import com.un1ink.application.process.IActivityProcess;
 import com.un1ink.application.process.req.DrawProcessReq;
@@ -23,6 +24,8 @@ import com.un1ink.domain.strategy.model.vo.DrawAwardVO;
 import com.un1ink.domain.strategy.service.draw.IDrawExec;
 import com.un1ink.domain.support.ids.IIdGenerator;
 import org.apache.tomcat.util.digester.Rule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
@@ -39,6 +42,8 @@ import java.util.Map;
 
 @Service
 public class ActivityProcessImpl implements IActivityProcess {
+
+    Logger logger = LoggerFactory.getLogger(ActivityProcessImpl.class);
 
     @Resource
     private IActivityPartake activityPartake;
@@ -71,6 +76,7 @@ public class ActivityProcessImpl implements IActivityProcess {
         Long takeId = partakeRes.getTakeId();
 
         // 2. 参加活动，发送MQ记录活动参与消息
+        logger.info("发送MQ消息 topic：{} bizId：{} message：{}", KafkaProducer.TOPIC_ACTIVITY_PARTAKE, req.getUId(), JSON.toJSONString(partakeRes));
         if (ResponseCode.SUCCESS.getCode().equals(partakeRes.getCode())) {
             ActivityPartakeRecordVO activityPartakeRecord = new ActivityPartakeRecordVO();
             activityPartakeRecord.setUId(req.getUId());

@@ -5,7 +5,7 @@ import lombok.*;
 import java.util.Map;
 
 /**
- * @description: 决策事务请求
+ * @description: 决策请求
  * @author：un1ink
  * @date: 2023/3/31
  */

@@ -7,6 +7,7 @@ import java.security.SecureRandom;
 import java.util.List;
 
 /**
+ * @description: 随机抽奖算法(外部处理超卖问题)
  * @author un1ink
  */
 @Component

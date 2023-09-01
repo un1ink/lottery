@@ -180,9 +180,18 @@ public class ActivityRepository implements IActivityRepository {
     }
 
     @Override
-    public void recoverActivityCacheStockByRedis(Long activityId, String tokenKey, String code) {
-        Jedis jedis =  jedisUtils.getJedis();
+    public void recoverActivityCacheStockByRedis(Long activityId, String code) {
+        Jedis jedis = jedisUtils.getJedis();
+        String tokenKey = RedisKey.KEY_LOTTERY_ACTIVITY_STOCK_COUNT(activityId);
         jedis.incr(tokenKey);
+        jedis.close();
+    }
+
+    @Override
+    public void getActivityCacheStockFromDbToRedis(Long activityId) {
+        Activity activity = activityDao.queryActivityById(activityId);
+        Jedis jedis = jedisUtils.getJedis();
+        jedis.set(RedisKey.KEY_LOTTERY_ACTIVITY_STOCK_COUNT(activityId), String.valueOf(activity.getStockSurplusCount()));
         jedis.close();
     }
 

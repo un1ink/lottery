@@ -30,13 +30,16 @@ public class ActivityProcessTest {
 
     @Test
     public void test_doDrawProcess() {
-        DrawProcessReq req = new DrawProcessReq();
-        req.setUId("un1ink_0411");
-        req.setActivityId(100001L);
-        DrawProcessRes drawProcessResult = activityProcess.doDrawProcess(req);
+        for(int i = 0; i < 1; i++) {
+            DrawProcessReq req = new DrawProcessReq();
+            req.setUId("un1ink_0830_" + i);
+            req.setActivityId(100001L);
+            DrawProcessRes drawProcessResult = activityProcess.doDrawProcess(req);
 
-        logger.info("请求入参：{}", JSON.toJSONString(req));
-        logger.info("测试结果：{}", JSON.toJSONString(drawProcessResult));
+            logger.info("请求入参：{}", JSON.toJSONString(req));
+            logger.info("测试结果：{}", JSON.toJSONString(drawProcessResult));
+        }
+
     }
 
 }

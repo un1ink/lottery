@@ -49,6 +49,9 @@ public class PassState extends AbstractState {
     @Override
     public Result doing(Long activityId, Enum<ActivityState> currentState) {
         boolean isSuccess = activityRepository.alterStatus(activityId, currentState, ActivityState.DOING);
+        if(isSuccess){
+            activityRepository.getActivityCacheStockFromDbToRedis(activityId);
+        }
         return isSuccess ? Result.buildResult(ResponseCode.SUCCESS, "活动变更活动中完成") : Result.buildErrorResult("活动状态变更失败");
     }
 

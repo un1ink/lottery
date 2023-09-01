@@ -110,7 +110,7 @@ public class ActivityPartakeImpl extends BaseActivityPartake {
     @Override
     protected void recoverActivityCacheStockByRedis(Long activityId, String tokenKey, String code) {
         logger.info("恢复活动库存，通过Redis activityId：{} tokenKey：{} code：{}", activityId, tokenKey, code);
-        activityRepository.recoverActivityCacheStockByRedis(activityId, tokenKey, code);
+        activityRepository.recoverActivityCacheStockByRedis(activityId, code);
     }
 
     @Override

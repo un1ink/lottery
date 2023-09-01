@@ -9,11 +9,12 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 
-//@Component("defaultRateRandomDrawAlgorithm")
+/**
+ * @description: 随机抽奖算法(内部处理超卖问题)
+ * @date: 2023/3/27
+ */
 @Component
 public class DefaultRateRandomDrawAlgorithm extends BaseAlgorithm {
-
-
 
     @Override
     public String randomDraw(Long strategyId, List<String> excludeAwardIds) {
@@ -31,7 +32,6 @@ public class DefaultRateRandomDrawAlgorithm extends BaseAlgorithm {
             differenceAwardRateList.add(awardRateVO);
             differenceDenominator = differenceDenominator.add(awardRateVO.getAwardRate());
         }
-
 
         // 前置判断
         if (differenceAwardRateList.size() == 0) {
@@ -54,7 +54,6 @@ public class DefaultRateRandomDrawAlgorithm extends BaseAlgorithm {
             }
             cursorVal += rateVal;
         }
-
 
         return awardId;
     }

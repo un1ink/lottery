@@ -35,4 +35,6 @@ public interface IActivityDeploy {
      */
     List<ActivityVO> scanToDoActivityList(Long id, Integer state);
 
+    void getActivityCacheStockFromDbToRedis(Long activityId);
+
 }

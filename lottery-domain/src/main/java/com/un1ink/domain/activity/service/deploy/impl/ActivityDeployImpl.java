@@ -72,4 +72,9 @@ public class ActivityDeployImpl implements IActivityDeploy {
     public List<ActivityVO> scanToDoActivityList(Long id, Integer state) {
         return activityRepository.scanToDoActivityList(id, state);
     }
+
+    @Override
+    public void getActivityCacheStockFromDbToRedis(Long activityId) {
+        activityRepository.getActivityCacheStockFromDbToRedis(activityId);
+    }
 }

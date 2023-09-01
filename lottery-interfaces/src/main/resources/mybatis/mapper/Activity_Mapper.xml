@@ -64,8 +64,8 @@
     </select>
 
     <update id="updateActivityStock" parameterType="com.un1ink.infrastructure.po.Activity">
-        UPDATE activity SET stockSurplusCount = #{stockSurplusCount}
-        WHERE activityId = #{activityId} AND stockSurplusCount > #{stockSurplusCount}
+        UPDATE activity SET stockSurplusCount = stockSurplusCount - 1
+        WHERE activityId = #{activityId}
     </update>
 
 </mapper>

@@ -92,13 +92,19 @@ public interface IActivityRepository {
     StockRes subtractionActivityStockByRedis(String uId, Long activityId, Integer stockCount);
 
     /**
-     * 恢复活动库存，通过Redis 【如果非常异常，则需要进行缓存库存恢复，只保证不超卖的特性，所以不保证一定能恢复占用库存，另外最终可以由任务进行补偿库存】
+     * 恢复活动库存，超卖回滚
      *
      * @param activityId    活动ID
-     * @param tokenKey      分布式 KEY 用于清理
      * @param code          状态
      */
-    void recoverActivityCacheStockByRedis(Long activityId, String tokenKey, String code);
+    void recoverActivityCacheStockByRedis(Long activityId, String code);
+
+    /**
+     * 从数据库中获取活动库存到Redis
+     *
+     * @param activityId    活动ID
+     * */
+    void getActivityCacheStockFromDbToRedis(Long activityId);
 
 
 
